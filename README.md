@@ -1,6 +1,8 @@
 # E2SIFT: Neuromorphic SIFT via Direct Feature Pyramid Recovery from Events
 This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: Neuromorphic SIFT via Direct Feature Pyramid Recovery from Events  ](https://doi.org/10.1109/ICIP51287.2024.10647465).
 
+<br>
+
 <div align="center">
   <img src="figures/overview_e2sift.jpg" alt="Overview E2SIFT" width="590"/>
   <br>
@@ -15,7 +17,7 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
   Overall workflow of the proposed alternate keypoint detection.
 </div>
 
-## Prerequisites
+## ⚠️Prerequisites
 The code is tested on Linux with the following prerequisites:
 1. Python 3.12
 2. PyTorch 1.11.0 (CUDA 11.3)
@@ -28,14 +30,14 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 - Clone this repository
    ```bash
-   git clone https://github.com/engrchrishenry/loc_aware_video_dedup.git
+   git clone [https://github.com/engrchrishenry/loc_aware_video_dedup.git](https://github.com/engrchrishenry/E2SIFT.git)
    cd loc_aware_video_dedup
    ```
 
 - Create conda environment
    ```bash
-   conda create --name dedup python=3.12
-   conda activate dedup
+   conda create --name e2sift python=3.12
+   conda activate e2sift
    ```
 
 - Install dependencies
@@ -80,6 +82,15 @@ If you use this work, please cite:
   doi={10.1109/ICASSP49357.2023.10095417}}
 ```
 -->
+
+## Acknowledgements
+
+This work was supported by the National Science Foundation (NSF) under Award 2148382.
+
+- [TSF-Net](ieeexplore.ieee.org/document/10275101/) model implementation were adapted from: https://github.com/parasmaharjan/TSFNet  
+- Some parts of the event data processing were adapted from: https://github.com/uzh-rpg/rpg_e2vid
+
+We gratefully acknowledge the authors and contributors for making their work publicly available.
 
 ## Contact
 In case of questions, feel free to contact at chffn@umsystem.edu or engr.chrishenry@gmail.com
