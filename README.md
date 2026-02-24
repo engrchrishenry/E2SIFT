@@ -23,6 +23,7 @@ The code is tested on Linux with the following prerequisites:
 2. PyTorch 1.11.0 (CUDA 11.3)
 3. MATLAB R2021a
 4. VLFeat 0.9.21
+5. pip install yt-dlp
 
 Remaining libraries are available in [requirements.txt](https://github.com/engrchrishenry/loc_aware_video_dedup/blob/main/requirements.txt)
 
