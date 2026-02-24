@@ -64,13 +64,12 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 - [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
 
-  The list of vimeo video links is available [here](https://data.csail.mit.edu/tofu/dataset/original_video_list.txt). We provide a helper script to batch download the videos.
+  The list of vimeo video links is available [here](https://data.csail.mit.edu/tofu/dataset/original_video_list.txt). We provide a helper script to batch download the videos. Use less `--cores` to avoid "HTTP Error 429: Too Many Requests"
   ```bash
-   python download_vimeo90k.py --video_links data/original_video_list.txt --out_path <ouput_directory> --cores 2
+   python download_vimeo90k.py --video_links data/original_video_list.txt --out_path <ouptut_directory> --cores 2
    ```
-  By default, [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) downloads the lowest quality video available (without audio). Modify the `ydl_opts` in [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) to change this behavior as per your requirements, if needed.
-  
-  > Note: Use less `--cores` to avoid "HTTP Error 429: Too Many Requests"
+   Use less `--cores` to avoid "HTTP Error 429: Too Many Requests"
+   By default, [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) downloads the lowest quality video available (without audio). Modify the `ydl_opts` in [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) to change this behavior as per your requirements, if needed.
 
   Rename video files and folders (important when using ESIM to generate synthetic events)
   ```bash
