@@ -2,12 +2,17 @@
 This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: Neuromorphic SIFT via Direct Feature Pyramid Recovery from Events  ](https://doi.org/10.1109/ICIP51287.2024.10647465).
 
 <div align="center">
-  <img src="figures/overview_e2sift.jpg" alt="Overview" width="590"/>
+  <img src="figures/overview_e2sift.jpg" alt="Overview E2SIFT" width="590"/>
+  <br>
+  Figure 1: Overview of the E2SIFT pipeline.
 </div>
 
+<br><br>
 
 <div align="center">
-  <img src="figures/overview_keypoint_detection.jpg" alt="Overview" width="590"/>
+  <img src="figures/overview_keypoint_detection.jpg" alt="Overview Keypoint Detection" width="590"/>
+  <br>
+  Figure 2: Keypoint detection and matching process.
 </div>
 
 ## Prerequisites
