@@ -10,7 +10,7 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
 <br><br>
 
 <div align="center">
-  <img src="figures/overview_keypoint_detection.jpg" alt="Overview Keypoint Detection" width="590"/>
+  <img src="figures/overview_keypoint_detection.jpg" alt="Overview Keypoint Detection" width="650"/>
   <br>
   Figure 2: Keypoint detection and matching process.
 </div>
