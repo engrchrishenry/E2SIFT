@@ -24,7 +24,7 @@ The code is tested on Linux with the following prerequisites:
 3. MATLAB R2021a
 4. VLFeat 0.9.21
 5. pip install yt-dlp
-
+pip install -U yt-dlp secretstorage
 Remaining libraries are available in [requirements.txt](https://github.com/engrchrishenry/loc_aware_video_dedup/blob/main/requirements.txt)
 
 ## Installation
@@ -62,13 +62,25 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
    The paper uses videos categorized as "Duplicate Scene Videos (DSVs)". The datasets contains a total of 7,558 DSVs labelled as 'ND' in [annotations.json](https://github.com/MKLab-ITI/FIVR-200K/blob/master/dataset/annotation.json). We provide [youtube_ids_ND.txt](https://github.com/engrchrishenry/loc_aware_video_dedup/blob/main/data/youtube_ids_ND.txt) which contains IDs of all DSVs. Only 4,960 DSVs were available for download at the time of writing our paper. The list of 4,960 videos used in our experiments is provided in [FIVR_available_videos.txt](https://github.com/engrchrishenry/loc_aware_video_dedup/blob/main/data/FIVR_available_videos.txt).
 
-- Vimeo-90k Dataset ([Download Here](http://toflow.csail.mit.edu))
+- [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
 
   The list of vimeo video links is available [here](https://data.csail.mit.edu/tofu/dataset/original_video_list.txt). We provide a helper script to batch download the videos.
   ```bash
-   python download_vimeo90k.py --video_links data/original_video_list.txt --out_path <ouput_directory>
+   python download_vimeo90k.py --video_links data/original_video_list.txt --out_path <ouput_directory> --cores 2
    ```
-  By default, [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) downloads the lowest quality video available (without audio). Modify the `ydl_opts` in [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) as per your requirements, if needed.  
+  By default, [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) downloads the lowest quality video available (without audio). Modify the `ydl_opts` in [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) to change this behavior as per your requirements, if needed.
+  
+  > Note: Use less `--cores` to avoid "HTTP Error 429: Too Many Requests"
+
+  Rename video files and folders (important when using ESIM to generate synthetic events)
+  ```bash
+  python rename_vimeo90k.py --root_dir <path_to_vimeo90k_dataset>
+  ```
+
+  Extract videos frames and resize for processing via ESIM
+  ```bash
+  python rename_vimeo90k.py --root_dir <path_to_vimeo90k_dataset>
+  ```
 
 ## Citation
 

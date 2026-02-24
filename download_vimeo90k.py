@@ -27,6 +27,8 @@ if __name__ == "__main__":
                         help="Path to text file containng video links for Vimeo90K dataset")
     parser.add_argument("--out_path", type=str, required=True,
                         help="Path to output folder")
+    parser.add_argument("--cores", type=int, default=2,
+                        help="Number of cores to use")
     
     args = parser.parse_args()
 
@@ -37,7 +39,7 @@ if __name__ == "__main__":
         vimeo_links = [line.strip() for line in file]
 
     # Create a pool of worker processes
-    num_processes = multiprocessing.cpu_count()
+    num_processes = args.cores
     pool = multiprocessing.Pool(processes=num_processes)
 
     # Download videos in parallel
