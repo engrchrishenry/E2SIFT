@@ -8,8 +8,9 @@ import multiprocessing
 # Define the function to download videos from links in a text file
 def download_video(url, output_directory):
     ydl_opts = {
-        'format': 'worst', # worst best
+        'format': 'worstvideo', # worst best
         'outtmpl': f'{output_directory}/%(title)s/%(title)s.%(ext)s',
+        'cookiesfrombrowser': ('chrome',),
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
