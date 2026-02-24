@@ -47,7 +47,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
      ```bash
      pip install -r requirements.txt
      ```
-  4. For running MATLAB scripts, you are required to install [VLFeat](https://www.vlfeat.org/download.html).
+
 ## Citation
 
 If you use this work, please cite:
