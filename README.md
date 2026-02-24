@@ -68,7 +68,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   ```bash
    python download_vimeo90k.py --video_links data/original_video_list.txt --out_path <ouput_directory>
    ```
-  By default, `[download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py)` downloads the lowest quality video available (without audio). Modify the `ydl_opts` in `[download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py)` as per your requirements, if needed.  
+  By default, `[download_vimeo90k.py])(https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py` downloads the lowest quality video available (without audio). Modify the `ydl_opts` in `[download_vimeo90k.py]`(https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) as per your requirements, if needed.  
 
 ## Citation
 
