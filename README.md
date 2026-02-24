@@ -30,7 +30,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 - Clone this repository
    ```bash
-   git clone [https://github.com/engrchrishenry/loc_aware_video_dedup.git](https://github.com/engrchrishenry/E2SIFT.git)
+   git clone https://github.com/engrchrishenry/E2SIFT.git
    cd loc_aware_video_dedup
    ```
 
