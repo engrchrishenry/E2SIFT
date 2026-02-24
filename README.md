@@ -7,10 +7,10 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
   Figure 1: Overall workflow of the proposed E2SIFT pipeline.
 </div>
 
-<br><br>
+<br>
 
 <div align="center">
-  <img src="figures/overview_keypoint_detection.jpg" alt="Overview Keypoint Detection" width="690"/>
+  <img src="figures/overview_keypoint_detection.jpg" alt="Overview Keypoint Detection" width="750"/>
   <br>
   Figure 2: Overall workflow of the proposed alternate keypoint detection.
 </div>
