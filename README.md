@@ -36,7 +36,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 - Create conda environment
    ```bash
-   conda create --name e2sift python=3.12
+   conda create --name e2sift python=3.13
    conda activate e2sift
    ```
 
