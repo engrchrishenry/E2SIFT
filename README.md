@@ -70,7 +70,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
    ```
    Use less `--cores` to avoid "HTTP Error 429: Too Many Requests"
 
-   By default, [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) downloads the lowest quality video available (without audio). Modify the `ydl_opts` in [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) to change this behavior as per your requirements, if needed.
+   [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) downloads the lowest quality video available (without audio). Modify the `ydl_opts` in [download_vimeo90k.py](https://github.com/engrchrishenry/E2SIFT/blob/main/download_vimeo90k.py) to change this behavior.
 
   Rename video files and folders (important when using ESIM to generate synthetic events)
   ```bash
