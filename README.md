@@ -4,7 +4,7 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
 <div align="center">
   <img src="figures/overview_e2sift.jpg" alt="Overview E2SIFT" width="590"/>
   <br>
-  Figure 1: Overall workflow of the proposed E2SIFT pipeline.
+  Overall workflow of the proposed E2SIFT pipeline.
 </div>
 
 <br>
@@ -12,7 +12,7 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
 <div align="center">
   <img src="figures/overview_keypoint_detection.jpg" alt="Overview Keypoint Detection" width="750"/>
   <br>
-  Figure 2: Overall workflow of the proposed alternate keypoint detection.
+  Overall workflow of the proposed alternate keypoint detection.
 </div>
 
 ## Prerequisites
