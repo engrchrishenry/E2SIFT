@@ -84,21 +84,21 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 - Follow the instructions [here](https://github.com/uzh-rpg/rpg_vid2e/tree/master) to setup ESIM and budil the python binding with GPU support.
 
-Once ESIM is setup:
-- Upsample Vimeo-90k videos a higher FPS via [upsample.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/upsampling/upsample.py). Sample command:
-```bash
-python upsampling/upsample.py --input_dir=<resized_videos_path> --output_dir=<upsampled_output_path>
-```
+  Once ESIM is setup:
+  - Upsample Vimeo-90k videos to a higher FPS via [upsample.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/upsampling/upsample.py). Sample command:
+  ```bash
+  python upsampling/upsample.py --input_dir=<resized_videos_path> --output_dir=<upsampled_output_path>
+  ```
 
-- Generate synthetic events via [generate_events.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/esim_torch/scripts/generate_events.py). Sample command:
+  - Generate synthetic events via [generate_events.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/esim_torch/scripts/generate_events.py). Sample command:
 
-```bash
-python esim_torch/scripts/generate_events.py --input_dir=<upsampled_videos_path> \
-    --output_dir=<events_output_path> \
-    --contrast_threshold_neg=0.2 \
-    --contrast_threshold_pos=0.2 \
-    --refractory_period_ns=0
-```
+  ```bash
+  python esim_torch/scripts/generate_events.py --input_dir=<upsampled_videos_path> \
+      --output_dir=<events_output_path> \
+      --contrast_threshold_neg=0.2 \
+      --contrast_threshold_pos=0.2 \
+      --refractory_period_ns=0
+  ```
 
 
 ## Citation
