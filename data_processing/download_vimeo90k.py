@@ -10,7 +10,7 @@ def download_video(url, output_directory):
     ydl_opts = {
         'format': 'worstvideo', # worst best
         'outtmpl': f'{output_directory}/%(title)s/%(title)s.%(ext)s',
-        'cookiesfrombrowser': ('chrome',),
+        # 'cookiesfrombrowser': ('chrome',),
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:

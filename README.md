@@ -82,7 +82,11 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   ```
   Use `240:180` for `<width:height>` if you want to be consistent with the paper.
 
+- Follow the instructions [here](https://github.com/uzh-rpg/rpg_vid2e/tree/master) to setup ESIM and budil the python binding with GPU support. Once ESIM is setup:
 
+Upsample Vimeo-90k videos a higher FPS via [upsample.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/upsampling/upsample.py)
+
+python upsampling/upsample.py --input_dir=/storage4tb/PycharmProjects/Datasets/vimeo_resized --output_dir=/storage4tb/PycharmProjects/Datasets/vimeo_upsampled/
 '''
 python esim_torch/scripts/generate_events.py --input_dir=/storage4tb/PycharmProjects/Datasets/reds_120fps_ts/ \
                                      --output_dir=example/events_new \
