@@ -73,12 +73,12 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
   `download_vimeo90k.py` downloads the lowest quality video available (without audio). Modify the `ydl_opts` in `download_vimeo90k.py` to change this behavior.
 
-  Rename video files and folders (important for using ESIM)
+  Rename video files and folders (important for synthetic event generation via ESIM)
   ```bash
   python rename_vimeo90k.py --root_dir <vimeo90k_dataset_path>
   ```
 
-  Extract and resize video frames (required for ESIM)
+  Extract and resize video frames (required for synthetic event generation via ESIM)
   ```bash
   python resize_vimeo90k_multi_core.py --video_dir <vimeo90k_dataset_path> --out_path <ouptut_directory> --res <width:height> --cores -1
   ```
