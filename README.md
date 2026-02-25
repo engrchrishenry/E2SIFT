@@ -68,9 +68,9 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   ```bash
   cd data_processing/
   python download_vimeo90k.py \
-  --video_links data/original_video_list.txt \
-  --out_path <ouptut_directory> \
-  --cores 2
+    --video_links data/original_video_list.txt \
+    --out_path <ouptut_directory> \
+    --cores 2
   ```
   Use less `--cores` to avoid "HTTP Error 429: Too Many Requests".
 
@@ -84,10 +84,10 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   Extract and resize video frames (required for ESIM)
   ```bash
   python resize_vimeo90k_multi_core.py \
-  --video_dir <vimeo90k_dataset_path> \
-  --out_path <ouptut_directory> \
-  --res <width:height> \
-  --cores -1
+    --video_dir <vimeo90k_dataset_path> \
+    --out_path <ouptut_directory> \
+    --res <width:height> \
+    --cores -1
   ```
   Use `240:180` for `<width:height>` if you want to be consistent with the paper.
 
