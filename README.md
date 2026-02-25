@@ -66,21 +66,23 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
   The list of vimeo video links is available [here](https://data.csail.mit.edu/tofu/dataset/original_video_list.txt). We provide a helper script to batch download the videos.
   ```bash
-   python download_vimeo90k.py --video_links data/original_video_list.txt --out_path <ouptut_directory> --cores 2
-   ```
-   Use less `--cores` to avoid "HTTP Error 429: Too Many Requests"
+  cd data_processing/
+  python download_vimeo90k.py --video_links data/original_video_list.txt --out_path <ouptut_directory> --cores 2
+  ```
+  Use less `--cores` to avoid "HTTP Error 429: Too Many Requests".
 
-   `download_vimeo90k.py` downloads the lowest quality video available (without audio). Modify the `ydl_opts` in `download_vimeo90k.py` to change this behavior.
+  `download_vimeo90k.py` downloads the lowest quality video available (without audio). Modify the `ydl_opts` in `download_vimeo90k.py` to change this behavior.
 
-  Rename video files and folders (important when using ESIM to generate synthetic events)
+  Rename video files and folders (important for using ESIM)
   ```bash
-  python rename_vimeo90k.py --root_dir <path_to_vimeo90k_dataset>
+  python rename_vimeo90k.py --root_dir <vimeo90k_dataset_path>
   ```
 
-  Extract videos frames and resize for processing via ESIM
+  Extract and resize video frames (required for ESIM)
   ```bash
-  python rename_vimeo90k.py --root_dir <path_to_vimeo90k_dataset>
+  python resize_vimeo90k_multi_core.py --video_dir <vimeo90k_dataset_path> --out_path <ouptut_directory> --res <width:height> --cores -1
   ```
+  Use `width:height=240:180` if you want to be consistent with the paper.
 
 ## Citation
 
