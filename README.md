@@ -60,8 +60,6 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 ### Download Dataset
 - Event Camera Dataset ([Download Here](https://rpg.ifi.uzh.ch/davis_data.html))
 
-   The paper uses videos categorized as "Duplicate Scene Videos (DSVs)". The datasets contains a total of 7,558 DSVs labelled as 'ND' in [annotations.json](https://github.com/MKLab-ITI/FIVR-200K/blob/master/dataset/annotation.json). We provide [youtube_ids_ND.txt](https://github.com/engrchrishenry/loc_aware_video_dedup/blob/main/data/youtube_ids_ND.txt) which contains IDs of all DSVs. Only 4,960 DSVs were available for download at the time of writing our paper. The list of 4,960 videos used in our experiments is provided in [FIVR_available_videos.txt](https://github.com/engrchrishenry/loc_aware_video_dedup/blob/main/data/FIVR_available_videos.txt).
-
 - [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
 
   The list of vimeo video links is available [here](https://data.csail.mit.edu/tofu/dataset/original_video_list.txt). We provide a helper script to batch download the videos.
@@ -73,16 +71,27 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
   `download_vimeo90k.py` downloads the lowest quality video available (without audio). Modify the `ydl_opts` in `download_vimeo90k.py` to change this behavior.
 
-  Rename video files and folders (important for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master))
+  Rename video files and folders (important for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)).
   ```bash
   python rename_vimeo90k.py --root_dir <vimeo90k_dataset_path>
   ```
 
-  Extract and resize video frames (required for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master))
+  Extract and resize video frames (required for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)).
   ```bash
   python resize_vimeo90k_multi_core.py --video_dir <vimeo90k_dataset_path> --out_path <ouptut_directory> --res <width:height> --cores -1
   ```
   Use `240:180` for `<width:height>` if you want to be consistent with the paper.
+
+
+'''
+python esim_torch/scripts/generate_events.py --input_dir=/storage4tb/PycharmProjects/Datasets/reds_120fps_ts/ \
+                                     --output_dir=example/events_new \
+                                     --contrast_threshold_neg=0.2 \
+                                     --contrast_threshold_pos=0.2 \
+                                     --refractory_period_ns=0
+
+python upsampling/upsample.py --input_dir=/storage4tb/PycharmProjects/Datasets/vimeo_resized --output_dir=/storage4tb/PycharmProjects/Datasets/vimeo_upsampled/
+'''
 
 ## Citation
 
