@@ -82,7 +82,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   ```bash
   python resize_vimeo90k_multi_core.py --video_dir <vimeo90k_dataset_path> --out_path <ouptut_directory> --res <width:height> --cores -1
   ```
-  Use `240:180` for `<width:height>` if you want to be consistent with the paper.
+  Use `240:180` for `<width:height>` if you want to be consistent with the paper.c
 
 ## Citation
 
