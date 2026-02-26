@@ -23,7 +23,7 @@ The code is tested on Linux with the following prerequisites:
 2. PyTorch 1.11.0 (CUDA 11.3)
 3. MATLAB R2021a
 4. VLFeat 0.9.21
-5. pip install yt-dlp
+5. pip install yt-dlp 
 pip install -U yt-dlp secretstorage
 Remaining libraries are available in [requirements.txt](https://github.com/engrchrishenry/loc_aware_video_dedup/blob/main/requirements.txt)
 
@@ -55,50 +55,52 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 <!--Download -->
 
-<!--### Option 2: Prepare dataset from scratch -->
+<!--### Download Dataset-->
 
-### Download Dataset
-- Event Camera Dataset ([Download Here](https://rpg.ifi.uzh.ch/davis_data.html))
+### Event Camera Dataset ([Download Here](https://rpg.ifi.uzh.ch/davis_data.html))
 
-- [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
+### [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
 
-  The list of vimeo video links is available [here](https://data.csail.mit.edu/tofu/dataset/original_video_list.txt). We provide a helper script to batch download the videos.
-  ```bash
-  cd data_processing/
-  python download_vimeo90k.py --video_links data/original_video_list.txt --out_path <ouptut_directory> --cores 2
-  ```
-  Use less `--cores` to avoid "HTTP Error 429: Too Many Requests".
+  - Download videos:
 
-  `download_vimeo90k.py` downloads the lowest quality video available (without audio). Modify the `ydl_opts` in `download_vimeo90k.py` to change this behavior.
+    The list of vimeo video links is available [here](https://data.csail.mit.edu/tofu/dataset/original_video_list.txt). We provide a helper script to batch download the videos.
+    ```bash
+    cd data_processing/
+    python download_vimeo90k.py --video_links data/original_video_list.txt -- out_path <ouptut_directory> --cores 2
+    ```
+    Use less `--cores` to avoid "HTTP Error 429: Too Many Requests".
 
-  Rename video files and folders (important for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)).
-  ```bash
-  python rename_vimeo90k.py --root_dir <vimeo90k_dataset_path>
-  ```
+    `download_vimeo90k.py` downloads the lowest quality video available   (without audio). Modify the `ydl_opts` in `download_vimeo90k.py` to change this behavior.
 
-  Extract and resize video frames (required for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)).
-  ```bash
-  python resize_vimeo90k_multi_core.py --video_dir <vimeo90k_dataset_path> --out_path <ouptut_directory> --res <width:height> --cores -1
-  ```
-  Use `240:180` for `<width:height>` if you want to be consistent with the paper.
+  - Rename video files and folders (important for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)).
+    ```bash
+    python rename_vimeo90k.py --root_dir <vimeo90k_dataset_path>
+    ```
 
-- Follow the instructions [here](https://github.com/uzh-rpg/rpg_vid2e/tree/master) to setup ESIM and budil the python binding with GPU support.
+  - Resize videos (important for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)).
+    ```bash
+    python resize_vimeo90k_multi_core.py --video_dir <vimeo90k_dataset_path> --out_path <ouptut_directory> --res <width:height> --cores -1
+    ```
+    Use `240:180` for `<width:height>` if you want to be consistent with the paper.
 
-  Once ESIM is setup:
-  - Upsample Vimeo-90k videos to a higher FPS via [upsample.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/upsampling/upsample.py). Sample command:
-  ```bash
-  python upsampling/upsample.py --input_dir=<resized_videos_path> --output_dir=<upsampled_output_path>
-  ```
+- Synthesize events
+  
+  Follow the instructions [here](https://github.com/uzh-rpg/rpg_vid2e/tree/master) to setup ESIM and build the python binding with GPU support. You may need to use a different conda environment to match the dependencies reqired to run ESIM with GPU support. Once ESIM is setup:
 
-  - Generate synthetic events via [generate_events.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/esim_torch/scripts/generate_events.py). Sample command:
+  Upsample Vimeo-90k videos to a higher FPS via [upsample.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/upsampling/upsample.py). Sample command:
+    ```bash
+    python upsampling/upsample.py --input_dir=<resized_videos_path> --output_dir=<upsampled_output_path>
+    ```
 
-  ```bash
-  python esim_torch/scripts/generate_events.py --input_dir=<upsampled_videos_path> \
-      --output_dir=<events_output_path> \
-      --contrast_threshold_neg=0.2 \
-      --contrast_threshold_pos=0.2 \
-      --refractory_period_ns=0
-  ```
+  Generate synthetic events via [generate_events.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/esim_torch/scripts/generate_events.py). Sample command:
+
+      ```bash
+      python esim_torch/scripts/generate_events.py --input_dir=<upsampled_videos_path> \
+        --output_dir=<events_output_path> \
+        --contrast_threshold_neg=0.2 \
+        --contrast_threshold_pos=0.2 \
+        --refractory_period_ns=0
+      ```
 
 
 ## Citation
