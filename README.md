@@ -85,7 +85,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 - Synthesize events
   
-  Follow the instructions [here](https://github.com/uzh-rpg/rpg_vid2e/tree/master) to setup ESIM and build the python binding with GPU support. You may need to use a different conda environment to match the dependencies reqired to run ESIM with GPU support. Once ESIM is setup:
+  Follow the instructions [here](https://github.com/uzh-rpg/rpg_vid2e/tree/master) to setup ESIM and build the python binding with GPU support. Use a different conda environment with the exact versions of the dependencies reqired to run ESIM with GPU support. Once ESIM is setup:
 
   Upsample Vimeo-90k videos to a higher FPS via [upsample.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/upsampling/upsample.py). Sample command:
     ```bash
