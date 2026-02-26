@@ -59,6 +59,8 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 ### Event Camera Dataset ([Download Here](https://rpg.ifi.uzh.ch/davis_data.html))
 
+Download all sequences (as Text.zip files) from the Event Camera Dataset [here](https://rpg.ifi.uzh.ch/davis_data.html).
+
 ### [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
 
   - Download videos:
@@ -90,6 +92,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   Upsample Vimeo-90k videos to a higher FPS via [upsample.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/upsampling/upsample.py). Sample command:
     ```bash
     python upsampling/upsample.py --input_dir=<resized_videos_path> --output_dir=<upsampled_output_path>
+    python upsampling/upsample.py --input_dir=/storage4tb/PycharmProjects/GitHub/E2SIFT/output/resized_vimeo90k --output_dir=/storage4tb/PycharmProjects/GitHub/E2SIFT/output/upsampled_vimeo90k
     ```
 
   Generate synthetic events via [generate_events.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/esim_torch/scripts/generate_events.py). Sample command:
