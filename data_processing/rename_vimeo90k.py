@@ -1,6 +1,7 @@
 import argparse
 import os
 import glob
+import json
 
 
 if __name__ == "__main__":
@@ -17,12 +18,15 @@ if __name__ == "__main__":
 
     # Sort for consistent numbering
     mp4_files.sort()
-
+    f = open(f"rename_log.json", "w")
+    rename_log = {}
     for idx, video_path in enumerate(mp4_files, start=1):
 
         folder_path = os.path.dirname(video_path)
+        f_name = os.path.basename(video_path)
 
         new_video_name = f"{idx}.mp4"
+        rename_log[f_name] = new_video_name
         new_video_path = os.path.join(folder_path, new_video_name)
 
         # Rename video first
@@ -33,5 +37,5 @@ if __name__ == "__main__":
         os.rename(folder_path, new_folder_path)
 
         print(f"Renamed folder and video to {idx}")
-
+    json.dump(rename_log, f, indent=4)
         
