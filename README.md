@@ -94,14 +94,11 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 - Event voxel generation
 
-  Generate event voxels for training the model.
-
   ```bash
+  # Generate event voxels for training the model.
   python prep_data_ecd_multi_core.py --events_dir ecd/train/ --out_dir <output_path>
-  ```
-  Generate event voxels for testing the model.
 
-  ```bash
+  # Generate event voxels for testing the model.
   python prep_data_ecd_multi_core.py --events_dir ecd/test/ --out_dir <output_path>
   ```
 
