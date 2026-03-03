@@ -56,7 +56,8 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 <!--Download -->
 
 <!--### Download Dataset-->
-
+The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html) (real events) and [Vimeo-90k Dataset](http://toflow.csail.mit.edu) ([ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)-generated synthetic events) for training and testing. A subset from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html) (real events) was used for testing.
+  
 ### [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html)
 
 - Download sequences:
@@ -95,10 +96,10 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 - Event voxel generation
 
   ```bash
-  # Generate event voxels for training the model.
+  # Generate event voxels for training the model
   python prep_data_ecd_multi_core.py --events_dir ecd/train/ --out_dir <output_path>
 
-  # Generate event voxels for testing the model.
+  # Generate event voxels for testing the model
   python prep_data_ecd_multi_core.py --events_dir ecd/test/ --out_dir <output_path>
   ```
 
