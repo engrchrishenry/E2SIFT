@@ -63,35 +63,32 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   
   We provide links to the train and test sequences used in the E2SIFT paper. The 'office_zigzag.zip' sequence was excluded as explained in the paper.
 
-  Download and the train sequences as mentioned in the E2SIFT paper.
+  Download and the train/test sequences as mentioned in the E2SIFT paper.
 
   ```bash
+  # Download train sequences
   wget -i data/ecd_train_links.txt -P ecd/train
-  ```
 
-  Download the test sequences as mentioned in the E2SIFT paper.
-
-  ```bash
+  # Download test sequences
   wget -i data/ecd_test_links.txt -P ecd/test
   ```
 
-  Unzip train sequences
+  Unzip train/test sequences
 
   ```bash
+  # Unzip train sequences
   for f in ecd/train/*.zip; do unzip -o "$f" -d "${f%.zip}"; done
-  ```
-
-  Unzip test sequences
-
-  ```bash
+  
+  # Unzip test sequences
   for f in ecd/test/*.zip; do unzip -o "$f" -d "${f%.zip}"; done
   ```
 
   [Optional]: Remove the .zip files to save storage space.
   ```bash
+  # Delete train sequences
   rm ecd/train/*.zip
-  ```
-  ```bash
+
+  # Delete test sequences
   rm ecd/test/*.zip
   ```
 
