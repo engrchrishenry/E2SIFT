@@ -2,7 +2,7 @@ import argparse
 import numpy as np
 from PIL import Image, ImageOps
 import os
-from utils.inference_utils import events_to_voxel_grid
+from data_utils import events_to_voxel_grid
 import cv2
 import shutil
 from joblib import Parallel, delayed

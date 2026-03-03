@@ -57,9 +57,23 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 <!--### Download Dataset-->
 
-### Event Camera Dataset ([Download Here](https://rpg.ifi.uzh.ch/davis_data.html))
+### [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html)
 
-Download all sequences (as Text.zip files) from the Event Camera Dataset [here](https://rpg.ifi.uzh.ch/davis_data.html).
+- Download sequences:
+  
+  We provide links to the train and test sequences. The train/test split is consistent with the E2SIFT paper.
+
+  Download the train sequences as mentioned in the E2SIFT paper.
+
+  ```bash
+  wget -i data/ecd_train_links.txt -P ecd/train
+  ```
+
+  Download the test sequences as mentioned in the E2SIFT paper.
+
+  ```bash
+  wget -i data/ecd_test_links.txt -P ecd/test
+  ```
 
 ### [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
 
@@ -74,7 +88,7 @@ Download all sequences (as Text.zip files) from the Event Camera Dataset [here](
 
     `download_vimeo90k.py` downloads the lowest quality video available   (without audio). Modify the `ydl_opts` in `download_vimeo90k.py` to change this behavior.
 
-  - Rename video files and folders (important for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)).
+  - Rename video files and folders (important for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)). The [generate_events.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/esim_torch/scripts/generate_events.py) script from [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master) will fail without renaming due to the presence special characters in video filenames.
     ```bash
     python rename_vimeo90k.py --root_dir <vimeo90k_dataset_path>
     ```
@@ -90,20 +104,70 @@ Download all sequences (as Text.zip files) from the Event Camera Dataset [here](
   Follow the instructions [here](https://github.com/uzh-rpg/rpg_vid2e/tree/master) to setup ESIM and build the python binding with GPU support. Use a different conda environment with the exact versions of the dependencies reqired to run ESIM with GPU support. Once ESIM is setup:
 
   Upsample Vimeo-90k videos to a higher FPS via [upsample.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/upsampling/upsample.py). Sample command:
-    ```bash
-    python upsampling/upsample.py --input_dir=<resized_videos_path> --output_dir=<upsampled_output_path>
-    python upsampling/upsample.py --input_dir=/storage4tb/PycharmProjects/GitHub/E2SIFT/output/resized_vimeo90k --output_dir=/storage4tb/PycharmProjects/GitHub/E2SIFT/output/upsampled_vimeo90k
-    ```
+  ```bash
+  python upsampling/upsample.py --input_dir=<resized_videos_path> --output_dir=<upsampled_output_path>
+  ```
 
   Generate synthetic events via [generate_events.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/esim_torch/scripts/generate_events.py). Sample command:
 
-      ```bash
-      python esim_torch/scripts/generate_events.py --input_dir=<upsampled_videos_path> \
-        --output_dir=<events_output_path> \
-        --contrast_threshold_neg=0.2 \
-        --contrast_threshold_pos=0.2 \
-        --refractory_period_ns=0
-      ```
+  ```bash
+  python esim_torch/scripts/generate_events.py --input_dir=<upsampled_videos_path> \
+    --output_dir=<events_output_path> \
+    --contrast_threshold_neg=0.2 \
+    --contrast_threshold_pos=0.2 \
+    --refractory_period_ns=0
+  ```
+  
+  Generate event voxels for training the model.
+
+  ```bash
+    --events_dir <synthetic_events_path> \
+    --upsamp_frames_dir <upsampled_frames_path> \
+    --out_dir <output_path> \
+    --bins 5 \
+    --events_per_px 0.55 \
+    --dur_sec 0.05 \
+    --kp_th 50 \
+    --sd_th 0.1 \
+    --range_th 20 \
+    --events_th_low 70000 \
+    --events_th_high 300000 \
+    --th_hist 99.9 \
+    --plot True \
+    --save_files 1 \
+    --cores -1
+  ```
+  
+  Usage
+
+  ```bash
+  options:
+    -h, --help            show this help message and exit
+    --events_dir EVENTS_DIR
+                          Path to directory containing ESIM-generated synthetic events
+    --upsamp_frames_dir UPSAMP_FRAMES_DIR
+                          Path to directory containing upsampled frames
+    --out_dir OUT_DIR     Path to output directory
+    --bins BINS           Number of bins for event voxel generation)
+    --events_per_px EVENTS_PER_PX
+                          Number of events per pixel
+    --dur_sec DUR_SEC     Event window duration
+    --kp_th KP_TH         Keypoint threshold for rejecting blank frames. None to ignore.
+    --sd_th SD_TH         Standard deviation threshold. None to ignore.
+    --range_th RANGE_TH   Range (max value - min value) threshold. None to ignore.
+    --events_th_low EVENTS_TH_LOW
+                          Minimum number of events within an event windows. None to ignore.
+    --events_th_high EVENTS_TH_HIGH
+                          Maximum number of events within an event windows. None to ignore.
+    --th_hist TH_HIST     Clipping threshold for histogram plotting. Value between 0 and 100, e.g., 99.9 means clipping at 99.9
+                          percentile.
+    --plot PLOT           Plot figures. True -> save plots: False -> do not save plots
+    --save_files SAVE_FILES
+                          Save output data. True -> save output files; False -> do not save output files
+    --cores CORES         Number of cores to use. -1 -> use all cores.
+  ```
+
+  
 
 
 ## Citation

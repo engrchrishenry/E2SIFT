@@ -37,5 +37,5 @@ if __name__ == "__main__":
         os.rename(folder_path, new_folder_path)
 
         print(f"Renamed folder and video to {idx}")
-    json.dump(rename_log, f, indent=4)
+    json.dump(rename_log, f, indent=4, ensure_ascii=False)
         
