@@ -61,9 +61,9 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 - Download sequences:
   
-  We provide links to the train and test sequences. The train/test split is consistent with the E2SIFT paper.
+  We provide links to the train and test sequences used in the E2SIFT paper. The 'office_zigzag.zip' sequence was excluded as explained in the paper.
 
-  Download the train sequences as mentioned in the E2SIFT paper.
+  Download and the train sequences as mentioned in the E2SIFT paper.
 
   ```bash
   wget -i data/ecd_train_links.txt -P ecd/train
@@ -75,6 +75,61 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   wget -i data/ecd_test_links.txt -P ecd/test
   ```
 
+  Unzip train sequences
+
+  ```bash
+  for f in ecd/train/*.zip; do unzip -o "$f" -d "${f%.zip}"; done
+  ```
+
+  Unzip test sequences
+
+  ```bash
+  for f in ecd/test/*.zip; do unzip -o "$f" -d "${f%.zip}"; done
+  ```
+
+  [Optional]: Remove the .zip files to save storage space.
+  ```bash
+  rm ecd/train/*.zip
+  ```
+  ```bash
+  rm ecd/test/*.zip
+  ```
+
+- Event voxel generation
+
+  Generate event voxels for training the model.
+
+  ```bash
+  python prep_data_ecd_multi_core.py --events_dir ecd/train/ --out_dir <output_path>
+  ```
+  Generate event voxels for testing the model.
+
+  ```bash
+  python prep_data_ecd_multi_core.py --events_dir ecd/test/ --out_dir <output_path>
+  ```
+
+  Usage:
+
+  ```bash
+  options:
+    -h, --help            show this help message and exit
+    --events_dir EVENTS_DIR
+                          Path to directory containing ESIM-generated synthetic events
+    --out_dir OUT_DIR     Path to output directory
+    --bins BINS           Number of bins for event voxel generation
+    --dur_sec DUR_SEC     Event window duration in seconds
+    --res RES             Event camera resolution (e.g., '240:180')
+    --events_per_px EVENTS_PER_PX
+                          Number of events per pixel
+    --kp_th KP_TH         Keypoint threshold for rejecting blank frames. None to ignore.
+    --sd_th SD_TH         Standard deviation threshold. None to ignore.
+    --range_th RANGE_TH   Range (max value - min value) threshold. None to ignore.
+    --th_hist TH_HIST     Clipping threshold for histogram plotting. Value between 0 and 100, e.g., 99.9 means clipping at 99.9 percentile.
+    --plot PLOT           Plot figures. True -> save plots: False -> do not save plots
+    --cores CORES         Number of cores to use. -1 -> use all cores.
+  ```
+
+  
 ### [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
 
   - Download videos:
@@ -118,27 +173,17 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
     --refractory_period_ns=0
   ```
   
+- Event voxel generation
+
   Generate event voxels for training the model.
 
   ```bash
-    --events_dir <synthetic_events_path> \
+  python prep_data_esim_multi_core.py --events_dir <synthetic_events_path> \
     --upsamp_frames_dir <upsampled_frames_path> \
-    --out_dir <output_path> \
-    --bins 5 \
-    --events_per_px 0.55 \
-    --dur_sec 0.05 \
-    --kp_th 50 \
-    --sd_th 0.1 \
-    --range_th 20 \
-    --events_th_low 70000 \
-    --events_th_high 300000 \
-    --th_hist 99.9 \
-    --plot True \
-    --save_files 1 \
-    --cores -1
+    --out_dir <output_path>
   ```
   
-  Usage
+  Usage:
 
   ```bash
   options:
@@ -148,24 +193,25 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
     --upsamp_frames_dir UPSAMP_FRAMES_DIR
                           Path to directory containing upsampled frames
     --out_dir OUT_DIR     Path to output directory
-    --bins BINS           Number of bins for event voxel generation)
+    --bins BINS           Number of bins for event voxel generation
+    --dur_sec DUR_SEC     Event window duration in seconds
+    --res RES             Event camera resolution (e.g., '240:180')
     --events_per_px EVENTS_PER_PX
                           Number of events per pixel
-    --dur_sec DUR_SEC     Event window duration
     --kp_th KP_TH         Keypoint threshold for rejecting blank frames. None to ignore.
     --sd_th SD_TH         Standard deviation threshold. None to ignore.
     --range_th RANGE_TH   Range (max value - min value) threshold. None to ignore.
-    --events_th_low EVENTS_TH_LOW
-                          Minimum number of events within an event windows. None to ignore.
-    --events_th_high EVENTS_TH_HIGH
-                          Maximum number of events within an event windows. None to ignore.
-    --th_hist TH_HIST     Clipping threshold for histogram plotting. Value between 0 and 100, e.g., 99.9 means clipping at 99.9
-                          percentile.
+    --th_hist TH_HIST     Clipping threshold for histogram plotting. Value between 0 and 100, e.g., 99.9 means clipping at 99.9 percentile.
     --plot PLOT           Plot figures. True -> save plots: False -> do not save plots
-    --save_files SAVE_FILES
-                          Save output data. True -> save output files; False -> do not save output files
     --cores CORES         Number of cores to use. -1 -> use all cores.
   ```
+
+- Generate Laplacian of Gaussian (LoG) (MATLAB)
+
+  Update the paths for the `images_dir` and `output_dir` variable in MATLAB script [gen_log_data.m]().
+  
+  Run [gen_log_data.m]() to generate the LoG data.
+  
 
   
 

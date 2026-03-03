@@ -10,7 +10,6 @@ https://rpg.ifi.uzh.ch/datasets/davis/outdoors_walking.zip
 https://rpg.ifi.uzh.ch/datasets/davis/outdoors_running.zip
 https://rpg.ifi.uzh.ch/datasets/davis/dynamic_rotation.zip
 https://rpg.ifi.uzh.ch/datasets/davis/dynamic_translation.zip
-https://rpg.ifi.uzh.ch/datasets/davis/office_zigzag.zip
 https://rpg.ifi.uzh.ch/datasets/davis/office_spiral.zip
 https://rpg.ifi.uzh.ch/datasets/davis/urban.zip
 https://rpg.ifi.uzh.ch/datasets/davis/slider_close.zip

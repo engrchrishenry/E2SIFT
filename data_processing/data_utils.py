@@ -50,6 +50,12 @@ def events_to_voxel_grid(events, num_bins, width, height):
     return voxel_grid
 
 
+def myFixedDurationEventReader(event_df, end_time=50.0, start_time=0.0):    
+    filtered_df = event_df[(event_df['t'] >= start_time) & (event_df['t'] <= end_time)]
+    event_window = np.array(filtered_df.values)
+    return event_window
+
+
 if '__main__' == __name__:
     # Example usage
     events = np.array([[0.1, 10, 20, 1],

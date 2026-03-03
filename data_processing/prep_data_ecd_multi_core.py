@@ -1,109 +1,106 @@
 import argparse
-import numpy as np
-from PIL import Image, ImageOps
 import os
-from data_utils import events_to_voxel_grid
-import cv2
+import time
 import shutil
-from joblib import Parallel, delayed
-from tqdm import tqdm
-import matplotlib
-matplotlib.use("Agg")
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+import cv2
+from tqdm import tqdm
+
+from PIL import Image, ImageOps
+from joblib import Parallel, delayed
+from data_utils import events_to_voxel_grid, myFixedDurationEventReader
 
 
 def find_nearest_larger_index(arr, value):
-    # Initialize variables to store the nearest index and the minimum difference
     nearest_index = None
     min_difference = float('inf')
-
-    # Iterate through the list and find the nearest integer greater than the specified value
     for i, num in enumerate(arr):
         difference = num - value
         if difference > 0 and difference < min_difference:
             nearest_index = i
             min_difference = difference
-
     return nearest_index
 
 
-def process_sequence(seq, events_dir, upsamp_frames_dir, out_dir, dur_sec, num_bins, 
-                     kp_th, range_thresh, sd_thresh, events_th_low, events_th_high, th_hist, plot):
+def process_sequence(seq, base_path, out_path, dur_sec, num_bins, 
+                     keypoint_thresh, range_thresh, sd_thresh, num_of_events_th_low,
+                     num_of_events_th_high, th_hist, plot):
+
+    event_f_path = f'{base_path}/{seq}/events.txt'
+    images_txt_f_path = f'{base_path}/{seq}/images.txt'
     sift = cv2.SIFT_create()
-    ts_file_frame_path = f'{upsamp_frames_dir}/{seq}/timestamps.txt'
-    event_files = os.listdir(f'{events_dir}/{seq}')
-    lines = open(ts_file_frame_path, 'r').readlines()[:len(event_files)]
-    lines = [float(temp) for temp in lines]
-    if not lines:
+
+    # print(f'Loading event file for {seq}.')
+    start = time.time()
+    event_df = pd.read_csv(event_f_path, sep=r"\s+", header=None,
+                            names=['t', 'x', 'y', 'pol'],
+                            dtype={'t': np.float64, 'x': np.int16, 'y': np.int16, 'pol': np.int16},
+                            engine='c', memory_map=True)
+    # print(f'Loaded event file for {seq} in {time.time() - start:.2f} sec.')
+    
+    lines = open(images_txt_f_path, 'r').readlines()
+    ts_lines = [float(temp.split(' ')[0]) for temp in lines]
+    if not ts_lines:
         return
 
-    first_frame_ts = lines[0]
-    last_frame_ts = lines[-1]
+    first_frame_ts = ts_lines[0]
+    last_frame_ts = ts_lines[-1]
 
     for i, ts in enumerate(np.arange(first_frame_ts + dur_sec, last_frame_ts, dur_sec)):
-        gt_im_index = find_nearest_larger_index(lines, ts)
+        gt_im_index = find_nearest_larger_index(ts_lines, ts)
         if gt_im_index is None:
             continue
         if i == 0:
             start_frame_index = 0
         else:
-            start_frame_index = find_nearest_larger_index(lines, ts - dur_sec)
+            start_frame_index = find_nearest_larger_index(ts_lines, ts - dur_sec)
 
-        if gt_im_index is None or start_frame_index is None:
-            continue
+        start_time, _ = lines[start_frame_index].split(' ')
+        end_time, gt_frame_name = lines[gt_im_index].split(' ')
+        gt_frame_name = gt_frame_name.strip()
+        start_time = float(start_time)
+        end_time = float(end_time)
+        im_name, im_ext = gt_frame_name.replace('images/', '').split('.')
 
-        gt_im_name = f'{gt_im_index:08d}.png'
-        im_name, im_ext = gt_im_name.split('.')
-        try:
-            im = cv2.imread(f'{upsamp_frames_dir}/{seq}/imgs/{gt_im_name}', cv2.IMREAD_GRAYSCALE)
-        except:
-            continue
-
+        im_path = f'{base_path}/{seq}/{gt_frame_name}'
+        im = cv2.imread(im_path, cv2.IMREAD_GRAYSCALE)
         if im is None:
             continue
 
         keypoints, descriptors = sift.detectAndCompute(im, None)
-        if kp_th is not None and len(keypoints) < kp_th:
+        if keypoint_thresh is not None and len(keypoints) < keypoint_thresh:
             continue
 
         width, height = im.shape[1], im.shape[0]
 
-        # Aggregate events
-        x, y, t, p = [], [], [], []
-        for event_name in range(start_frame_index, gt_im_index + 1):
-            ev_file = f'{event_name:010d}.npz'
-            ev_path = f'{events_dir}/{seq}/{ev_file}'
-            if not os.path.exists(ev_path):
-                continue
-            ev = np.load(ev_path)
-            x.append(ev['x'])
-            y.append(ev['y'])
-            t.append(ev['t'].astype(np.float32) / 1e9)
-            p.append(ev['p'])
-
-        if not x:
-            continue
-
-        x = np.concatenate(x)
-        y = np.concatenate(y)
-        t = np.concatenate(t)
-        p = np.concatenate(p)
-
-        if ((events_th_low is not None and len(t) < events_th_low) or
-            (events_th_high is not None and len(t) > events_th_high)):
-            continue
-
-        event_window = np.stack([t, x, y, p], axis=1)
-        vox = events_to_voxel_grid(event_window, num_bins=num_bins, width=width, height=height)
-
-        # Filtering by std and range
-        range_vox = vox.max() - vox.min()
-        avg_sd = np.mean([np.std(v) for v in vox])
-        if (range_thresh is not None and range_vox > range_thresh):
-            continue
-        if (sd_thresh is not None and any(np.std(v) < sd_thresh for v in vox)):
+        event_window = myFixedDurationEventReader(event_df, end_time=end_time, start_time=start_time)
+        if event_window.size == 0:
             continue
         
+        if num_of_events_th_low is not None or num_of_events_th_high is not None:
+            if len(event_window) < num_of_events_th_low or len(event_window) > num_of_events_th_high:
+                continue
+
+        vox = events_to_voxel_grid(event_window, num_bins=num_bins, width=width, height=height)
+        range_vox = vox.max() - vox.min()
+        avg_sd = 0
+        sd_indicator = 0
+
+        for temp in vox:
+            sd_temp = np.std(temp)
+            if sd_thresh is not None and sd_temp < sd_thresh:
+                sd_indicator = 1
+                break
+            avg_sd += sd_temp
+        avg_sd /= len(vox)
+
+        if range_thresh is not None and range_vox > range_thresh:
+            continue
+        if sd_thresh is not None and sd_indicator == 1:
+            continue
+
         stats = {
             "range_vox": float(range_vox),
             "vox_max": float(vox.max()),
@@ -112,40 +109,36 @@ def process_sequence(seq, events_dir, upsamp_frames_dir, out_dir, dur_sec, num_b
             "avg_sd": float(avg_sd)
         }
 
-        # Save
-        np.save(f'{out_dir}/vox/{seq}_{im_name}.npy', vox)
+        # Save outputs
+        np.save(f'{out_path}/vox/{seq}_{im_name}.npy', vox)
         np.save(f'{out_dir}/stats/{seq}_{im_name}.npy', stats)
-        shutil.copy(f'{upsamp_frames_dir}/{seq}/imgs/{gt_im_name}',
-                    f'{out_dir}/images/{seq}_{im_name}.{im_ext}')
-        
+        shutil.copy(im_path, f'{out_path}/images/{seq}_{im_name}.{im_ext}')
+
         if plot == 1:
             fig, axes = plt.subplots(3, len(vox), figsize=(12, 7))
-            plt.suptitle(f'{len(x)} range {range_vox:.3f} max {vox.max():.3f} min {vox.min():.3f}, avg_sd {avg_sd:.3f}, clip_thresh {th_hist}')
+            plt.suptitle(f'{len(event_window)} range {range_vox:.3f} max {vox.max():.3f} min {vox.min():.3f}, avg_sd {avg_sd:.3f}, clip_thresh {th_hist}')
             
             percentile_max = np.percentile(vox.flatten(), th_hist)
             percentile_min = np.percentile(vox.flatten(), 100-th_hist)
-            
+
             for j in range(len(vox)):
-                img = axes[0][j].imshow(vox[j], cmap='gray')
-                plt.colorbar(img, ax=axes[0][j])
+                img = axes[0][j].imshow(vox[j, :, :], cmap='gray')
                 axes[0][j].set_title(f'Vox Bin {j + 1}')
-                axes[1][j].hist(vox[j].ravel())
+                plt.colorbar(img, ax=axes[0][j])
+                axes[1][j].hist(vox[j, :, :].ravel())
                 axes[1][j].set_title(f'SD {np.std(vox[j]):.3f}')
                 img = axes[2][j].imshow(np.clip(vox[j], percentile_min, percentile_max), cmap='gray')
                 axes[2][j].set_title(f'Vox Bin Clipped {j + 1}')
                 plt.colorbar(img, ax=axes[2][j])
             plt.tight_layout()
-            plt.savefig(f'{out_dir}/plots/{seq}_{im_name}.{im_ext}')
+            plt.savefig(f'{out_path}/plots/{seq}_{im_name}.{im_ext}')
             plt.close()
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate event voxels from ESIM-generated synthetic events.")
 
     parser.add_argument("--events_dir", type=str, required=True,
                         help="Path to directory containing ESIM-generated synthetic events")
-    parser.add_argument('--upsamp_frames_dir', type=str, required=True,
-                        help='Path to directory containing upsampled frames')
     parser.add_argument('--out_dir', type=str, required=True,
                         help='Path to output directory')
     parser.add_argument('--bins', type=int, default=5,
@@ -168,12 +161,11 @@ if __name__ == "__main__":
                         help='Plot figures. True -> save plots: False -> do not save plots')
     parser.add_argument('--cores', type=int, default=-1,
                         help='Number of cores to use. -1 -> use all cores.')
-
-
+    
+    
     args = parser.parse_args()
-
+    
     events_dir = args.events_dir
-    upsamp_frames_dir = args.upsamp_frames_dir
     out_dir = args.out_dir
     bins = args.bins
     dur_sec = args.dur_sec
@@ -183,21 +175,21 @@ if __name__ == "__main__":
     range_th = args.range_th
     sd_th = args.sd_th
     width, height = map(int, args.res.split(":"))
-    events_th_low = int(width * height * events_per_px) - 3000
-    events_th_high = int(width * height * events_per_px) + 5000
+    events_th_low = int(width * height * events_per_px) - 12000
+    events_th_high = int(width * height * events_per_px) + 100000
     th_hist = args.th_hist
     plot = args.plot
     cores = args.cores
 
     out_name = f'{bins}_{dur_sec}_{kp_th}_{events_th_low}_{events_th_high}'
-    out_dir = f'{out_dir}/{out_name}'
+    out_dir = os.path.join(out_dir, out_name)
 
-    for sub in ["images", "vox", "plots", "stats"]:
-        os.makedirs(f"{out_dir}/{sub}", exist_ok=True)
-    
+    # Ensure output directories exist
+    for sub in ['images', 'vox', 'plots', "stats"]:
+        os.makedirs(f'{out_dir}/{sub}', exist_ok=True)
+
     with open(f"{out_dir}/params.txt", "w") as f:
         f.write(f'events_dir = {events_dir}\n')
-        f.write(f'upsamp_frames_dir = {upsamp_frames_dir}\n')
         f.write(f'out_dir = {out_dir}\n')
         f.write(f'num_bins = {bins}\n')
         f.write(f'dur_sec = {dur_sec}\n')
@@ -213,20 +205,13 @@ if __name__ == "__main__":
         f.write(f'cores = {cores}')
     f.close()
 
-    sequences = os.listdir(events_dir)
-    Parallel(n_jobs=cores)(delayed(process_sequence)(
-        seq,
-        events_dir,
-        upsamp_frames_dir,
-        out_dir,
-        dur_sec,
-        bins,
-        kp_th,
-        range_th,
-        sd_th,
-        events_th_low,
-        events_th_high,
-        th_hist,
-        plot
-    ) for seq in tqdm(sequences))
+    seqs = sorted(os.listdir(events_dir))
+    print(f'Found {len(seqs)} sequences to process.')
+
+    Parallel(n_jobs=cores)(
+        delayed(process_sequence)(seq, events_dir, out_dir, dur_sec, bins, 
+                                  kp_th, range_th, sd_th, events_th_low,
+                                  events_th_high, th_hist, plot)
+        for seq in tqdm(seqs)
+    )
 
