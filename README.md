@@ -124,14 +124,14 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --cores CORES         Number of cores to use. -1 -> use all cores.
   ```
 
-  - Generate Laplacian of Gaussian (LoG) (MATLAB)
+- Generate Laplacian of Gaussian (LoG) (MATLAB)
 
-    Update the variables in MATLAB script [gen_log_data.m](https://github.com/engrchrishenry/E2SIFT/blob/main/data_processing/LoG_generation/gen_LoG_data.m) as:
-    - `images_dir = 'images' directory path generated after running prep_data_ecd_multi_core.py`
-    - `output_dir = <output_log_dir>`
-    - `n_cores = <no_of_cores_to_use>`
-    
-    Run [gen_log_data.m](https://github.com/engrchrishenry/E2SIFT/blob/main/data_processing/LoG_generation/gen_LoG_data.m)
+  Update the variables in MATLAB script [gen_log_data.m](https://github.com/engrchrishenry/E2SIFT/blob/main/data_processing/LoG_generation/gen_LoG_data.m) as:
+  - `images_dir = 'images' directory path generated after running prep_data_ecd_multi_core.py`
+  - `output_dir = <output_log_dir>`
+  - `n_cores = <no_of_cores_to_use>`
+  
+  Run [gen_log_data.m](https://github.com/engrchrishenry/E2SIFT/blob/main/data_processing/LoG_generation/gen_LoG_data.m)
 
 ### [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
 
