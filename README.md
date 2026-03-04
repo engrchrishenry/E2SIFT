@@ -124,6 +124,11 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --cores CORES         Number of cores to use. -1 -> use all cores.
   ```
 
+  - Generate Laplacian of Gaussian (LoG) (MATLAB)
+
+  Update `images_dir`, `output_dir`, and `n_cores` variables in MATLAB script [data_processing/LoG_generation/gen_log_data.m](). Set `n_cores` to maximum number of CPU cores available for fastest processing.
+  
+  Run [data_processing/LoG_generation/gen_log_data.m]() to generate the LoG data.
   
 ### [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
 
@@ -203,9 +208,9 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
 - Generate Laplacian of Gaussian (LoG) (MATLAB)
 
-  Update the paths for the `images_dir` and `output_dir` variable in MATLAB script [gen_log_data.m]().
+  Update `images_dir`, `output_dir`, and `n_cores` variables in MATLAB script [data_processing/LoG_generation/gen_log_data.m](). Set `n_cores` to maximum number of CPU cores available for fastest processing.
   
-  Run [gen_log_data.m]() to generate the LoG data.
+  Run [data_processing/LoG_generation/gen_log_data.m]() to generate the LoG data.
   
 
   
