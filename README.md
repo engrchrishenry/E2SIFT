@@ -126,9 +126,12 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
   - Generate Laplacian of Gaussian (LoG) (MATLAB)
 
-  Update `images_dir`, `output_dir`, and `n_cores` variables in MATLAB script [data_processing/LoG_generation/gen_log_data.m](https://github.com/engrchrishenry/E2SIFT/blob/main/data_processing/LoG_generation/gen_LoG_data.m).
+  Update the variables in MATLAB script [gen_log_data.m](https://github.com/engrchrishenry/E2SIFT/blob/main/data_processing/LoG_generation/gen_LoG_data.m) as:
+  - `images_dir = 'images' directory path generated after running prep_data_ecd_multi_core.py`
+  - `output_dir = <output_log_dir>`
+  - `n_cores = <no_of_cores_to_use>`
   
-  Run [data_processing/LoG_generation/gen_log_data.m](https://github.com/engrchrishenry/E2SIFT/blob/main/data_processing/LoG_generation/gen_LoG_data.m) to generate the LoG data.
+  Run [gen_log_data.m](https://github.com/engrchrishenry/E2SIFT/blob/main/data_processing/LoG_generation/gen_LoG_data.m)
 
 ### [Vimeo-90k Dataset](http://toflow.csail.mit.edu)
 
@@ -208,11 +211,12 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
 - Generate Laplacian of Gaussian (LoG) (MATLAB)
 
-  Update `images_dir`, `output_dir`, and `n_cores` variables in MATLAB script [data_processing/LoG_generation/gen_log_data.m](). Set `n_cores` to maximum number of CPU cores available for fastest processing.
+  Update the variables in MATLAB script [gen_log_data.m](https://github.com/engrchrishenry/E2SIFT/blob/main/data_processing/LoG_generation/gen_LoG_data.m) as:
+  - `images_dir = 'images' directory path generated after running prep_data_esim_multi_core.py`
+  - `output_dir = <output_log_dir>`
+  - `n_cores = <no_of_cores_to_use>`
   
-  Run [data_processing/LoG_generation/gen_log_data.m]() to generate the LoG data.
-  
-
+  Run [gen_log_data.m](https://github.com/engrchrishenry/E2SIFT/blob/main/data_processing/LoG_generation/gen_LoG_data.m)
   
 
 
