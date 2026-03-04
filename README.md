@@ -84,7 +84,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   for f in ecd/test/*.zip; do unzip -o "$f" -d "${f%.zip}"; done
   ```
 
-  [Optional]: Remove the .zip files to save storage space.
+  [Optional] Remove the .zip files to save storage space.
   ```bash
   # Delete train sequences
   rm ecd/train/*.zip
