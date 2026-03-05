@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 from torch.autograd import Variable
 import os
 from datetime import datetime
-from models_biren.EDSR import TSFNet_E2SIFT
+from models.EDSR import TSFNet_E2SIFT
 from data_utils import Event_Camera_Dataset_LoG
 import torch.utils.data
 from torch.utils.tensorboard import SummaryWriter
@@ -26,7 +26,7 @@ def train(epoch):
     psnr_sum = 0.0
     total_mse = 0.0
     total_ssim = 0.0
-    for batch_index, (voxs, logs) in enumerate(train_loader):
+    for batch_index, (voxs, logs, _) in enumerate(train_loader):
         if torch.cuda.is_available():
             voxs = voxs.cuda()
             logs = logs.cuda()
@@ -108,7 +108,7 @@ def eval_training(epoch=0):
     total_mse = 0.0
     total_ssim = 0.0
     with torch.no_grad():
-        for (voxs, logs) in valid_loader:
+        for (voxs, logs, _) in valid_loader:
 
             if torch.cuda.is_available():
                 voxs = voxs.cuda()
@@ -188,6 +188,10 @@ if __name__ == '__main__':
                         help='Min and max clipping value for event voxels')
     parser.add_argument("--log_clip", type=float, nargs=2, default=[-0.15, 0.15], metavar=('min', 'max'),
                         help='Min and max clipping value for LoG pyramid')
+    parser.add_argument("--dct_min", type=str, 
+                        help='Path to dct_min.npy (generated via get_dct_min_max.py)')
+    parser.add_argument("--dct_max", type=str, 
+                        help='Path to dct_max.npy (generated via get_dct_min_max.py)')
     parser.add_argument("--batch_size", type=int, default=32,
                         help="Batch size")
     parser.add_argument("--epochs", type=int, default=200,
@@ -206,15 +210,15 @@ if __name__ == '__main__':
     id = '1'
     
     print("\nloading dataset ...")
-    train_data_load = Event_Camera_Dataset_LoG(args.vox_path, args.log_path, 'train', args.vox_clip, args.log_clip)
+    train_data_load = Event_Camera_Dataset_LoG(args.vox_path, args.log_path, 'train', args.vox_clip, args.log_clip, 'sigmoid')
     train_loader = torch.utils.data.DataLoader(train_data_load, batch_size=args.batch_size, shuffle=True, num_workers=args.n_workers)
     print(f"Iteration per epoch: {len(train_loader)}")
 
-    valid_data_load = Event_Camera_Dataset_LoG(args.vox_path_valid, args.log_path_valid, 'valid', args.vox_clip, args.log_clip)
+    valid_data_load = Event_Camera_Dataset_LoG(args.vox_path_valid, args.log_path_valid, 'valid', args.vox_clip, args.log_clip, 'sigmoid')
     valid_loader = torch.utils.data.DataLoader(valid_data_load, batch_size=args.batch_size, shuffle=False, num_workers=args.n_workers)
     print("Validation set samples: ", len(valid_loader))
 
-    model = TSFNet_E2SIFT()
+    model = TSFNet_E2SIFT(args.dct_min, args.dct_max)
     print('Parameters number is ', sum(param.numel() for param in model.parameters()))
 
     # loss function

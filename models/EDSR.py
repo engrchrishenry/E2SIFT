@@ -107,7 +107,7 @@ class MSTFusionBlock(nn.Module):
 #------------------------------------------------------------------------------
 
 class TSFNet_E2SIFT(nn.Module):
-    def __init__(self, conv=default_conv):
+    def __init__(self, dct_min_path, dct_max_path, conv=default_conv):
         super(TSFNet_E2SIFT, self).__init__()
 
         in_channel_img = 4 * 5
@@ -120,8 +120,8 @@ class TSFNet_E2SIFT(nn.Module):
         kernel_size = 3
         n_basicblock = 20
 
-        self.dct_min = torch.from_numpy(np.load('/storage4tb/PycharmProjects/rpg_e2vid/dct_min_new.npy')).float()
-        self.dct_max = torch.from_numpy(np.load('/storage4tb/PycharmProjects/rpg_e2vid/dct_max_new.npy')).float()
+        self.dct_min = torch.from_numpy(np.load(dct_min_path)).float()
+        self.dct_max = torch.from_numpy(np.load(dct_max_path)).float()
 
         # define head module for pixel input
         self.head_pix = nn.Sequential(
@@ -168,9 +168,9 @@ class TSFNet_E2SIFT(nn.Module):
                 res_pix, x_dct = layer(res_pix, x_dct)
 
         res_pix += x_pix
-        print ('1', res_pix.shape)
+        # print ('1', res_pix.shape)
         x_pix = self.tail(res_pix)
-        print ('2', res_pix.shape)
+        # print ('2', res_pix.shape)
         x_pix = self.pix_shuffle(x_pix)
 
         return x_pix

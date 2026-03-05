@@ -153,7 +153,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     ```bash
     python resize_vimeo90k_multi_core.py --video_dir <vimeo90k_dataset_path> --out_path <ouptut_directory> --res <width:height> --cores -1
     ```
-    Use `240:180` for `<width:height>` if you want to be consistent with the paper.
+    Use `224:160` for `<width:height>` if you want to be consistent with the paper.
 
 - Synthesize events
   
@@ -196,7 +196,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --out_dir OUT_DIR     Path to output directory
     --bins BINS           Number of bins for event voxel generation
     --dur_sec DUR_SEC     Event window duration in seconds
-    --res RES             Event camera resolution (e.g., '240:180')
+    --res RES             Event camera resolution (e.g., '224:160')
     --events_per_px EVENTS_PER_PX
                           Number of events per pixel
     --kp_th KP_TH         Keypoint threshold for rejecting blank frames. None to ignore.

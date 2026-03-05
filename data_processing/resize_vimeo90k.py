@@ -63,7 +63,7 @@ if __name__ == "__main__":
     parser.add_argument("--out_path", type=str, required=True,
                         help="Path to output folder")
     parser.add_argument("--res", type=str, required=True,
-                        help="Target resolution (e.g., '240:180')")
+                        help="Target resolution (e.g., '224:160')")
     parser.add_argument("--dur", type=int, default=None,
                         help="Target duration in seconds (e.g., '10'). Set to None to keep original duration.")
                         

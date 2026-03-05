@@ -152,8 +152,8 @@ if __name__ == "__main__":
                         help='Number of bins for event voxel generation')
     parser.add_argument('--dur_sec', type=float, default=0.05,
                         help='Event window duration in seconds')
-    parser.add_argument("--res", type=str, default='240:180',
-                        help="Event camera resolution (e.g., '240:180')")
+    parser.add_argument("--res", type=str, default='224:160',
+                        help="Event camera resolution (e.g., '224:160')")
     parser.add_argument('--events_per_px', type=float, default=0.55,
                         help='Number of events per pixel')
     parser.add_argument('--kp_th', type=int, default=50,

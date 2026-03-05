@@ -38,9 +38,11 @@ if __name__ == '__main__':
                         help='Min and max clipping value for event voxels')
     parser.add_argument('--num_voxels', type=int, required=True,
                         help='Number of event voxels to process')
+    parser.add_argument('--model_ip_size', type=str, default='160:160',
+                        help="Input size w:h for the model TSFNet_E2SIFT (e.g., '160:160')")
     parser.add_argument('--out_path', type=str, default='output/dct_norm',
                         help='Path to the output directory')
-
+    
     args = parser.parse_args()
 
     data_dir = args.data_dir
@@ -48,6 +50,7 @@ if __name__ == '__main__':
     out_path = args.out_path
     vox_clip_min = args.vox_clip[0]
     vox_clip_max = args.vox_clip[1]
+    width, height = map(int, args.model_ip_size.split(":"))
 
     os.makedirs(args.out_path, exist_ok=True)
 
@@ -57,6 +60,7 @@ if __name__ == '__main__':
     for i, vox_path in enumerate(vox_paths[:num_voxels]):
         vox = np.load(f'{data_dir}/{vox_path}')['arr_0']
         _, vox = norm_vox_log(vox, vox_clip_min, vox_clip_max, 'sigmoid')
+        vox = vox[:, :height, :width]
 
         vox = torch.from_numpy(vox).float().unsqueeze(dim=0)
         tensor_list.append(vox)

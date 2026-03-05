@@ -11,7 +11,7 @@ import glob
 import matplotlib.pyplot as plt
 # import pysift
 import cv2
-# from scipy.io import loadmat
+from scipy.io import loadmat
 
 
 def get_duration_s(file_path, start_frame, num_of_frames=2):
@@ -92,7 +92,7 @@ def recon_norm_log(arr, clip_min, clip_max):
 
 class Event_Camera_Dataset_LoG(torch.utils.data.Dataset):
     def __init__(self, vox_path, log_path, mode, clip_vox, clip_log, activation):
-        self.vox_paths = sorted(glob.glob(f'{vox_path}/*.npy', recursive=True))
+        self.vox_paths = sorted(glob.glob(f'{vox_path}/*.npz', recursive=True))
         self.log_paths = sorted(glob.glob(f'{log_path}/*.mat', recursive=True))
         self.mode = mode
         self.clip_min_vox, self.clip_max_vox = clip_vox[0], clip_vox[1]
@@ -108,9 +108,9 @@ class Event_Camera_Dataset_LoG(torch.utils.data.Dataset):
         name = os.path.basename(log_path)
         name, ext = os.path.splitext(name)
         
-        vox = np.load(vox_path)
+        vox = np.load(vox_path)['arr_0']
         mat_data = loadmat(log_path)
-        log_0, log_1, log_2, log_3 = mat_data['log_pyramid']
+        log_0, log_1, log_2, log_3 = mat_data['x']
 
         vox = norm_vox_e2vid(torch.from_numpy(vox))
         vox = vox.cpu().numpy()

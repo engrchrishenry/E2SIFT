@@ -72,7 +72,7 @@ if __name__ == "__main__":
     parser.add_argument("--out_path", type=str, required=True,
                         help="Path to output folder")
     parser.add_argument("--res", type=str, required=True,
-                        help="Target resolution (e.g., '240:180')")
+                        help="Target resolution (e.g., '224:160')")
     parser.add_argument("--cores", type=int, default=-1,
                         help="Number of cores to use to process the data. Default: -1 -> Uses all cores.")
     parser.add_argument("--dur", type=int, default=None,
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     input_folder = args.video_dir
     output_folder = args.out_path
-    target_resolution = args.res # Set the target resolution (width x height) '240:180'
+    target_resolution = args.res
     desired_duration = args.dur if args.dur is not None else None
     cores = multiprocessing.cpu_count() if args.cores == -1 else args.cores
 
