@@ -102,94 +102,13 @@ class MSTFusionBlock(nn.Module):
         out_pix = self.msab(out_pix, self.stage_tconv(out_dct, output_size=in_pix.shape[2:]))
         #out_pix = self.msab(out_pix, out_dct)
         return out_pix+in_pix, out_dct+in_dct
-        
 
-class TSFNet(nn.Module):
-    def __init__(self, conv=default_conv):
-        super(TSFNet, self).__init__()
-
-        in_channel_img = 4
-        in_channel_dct = 16
-        out_channel = 4
-        
-        dim_imgfeat = 96
-        dim_dctfeat = 32
-        
-        kernel_size = 3
-        n_basicblock = 20
-        
-        # define head module for pixel input
-        self.head_pix = nn.Sequential(nn.Conv2d(in_channels=in_channel_img, out_channels=dim_imgfeat//2, kernel_size=kernel_size, padding=(kernel_size//2), stride=1),
-                                nn.PReLU(dim_imgfeat//2),
-                                nn.Conv2d(in_channels=dim_imgfeat//2, out_channels=dim_imgfeat, kernel_size=kernel_size, padding=(kernel_size//2), stride=1)
-                                )
-        
-        # define head module for dct input
-        self.head_dct = nn.Sequential(nn.Conv2d(in_channels=in_channel_dct, out_channels=dim_dctfeat//2, kernel_size=kernel_size, padding=(kernel_size//2), stride=1),
-                               nn.PReLU(dim_dctfeat//2),
-                               nn.Conv2d(in_channels=dim_dctfeat//2, out_channels=dim_dctfeat, kernel_size=kernel_size, padding=(kernel_size//2), stride=1)
-                               )
-        
-        self.body = nn.ModuleList([ MSTFusionBlock(dim_imgfeat, dim_dctfeat, kernel_size) for _ in range(n_basicblock) ])
-        
-        
-        # define tail module
-        self.tail = conv(dim_imgfeat, out_channel, kernel_size)
-        self.pix_shuffle = nn.PixelShuffle(2)
-        # else :
-        #     n_blocks = (h_inp//4)*(w_inp//4) 
-        #     x_pix_2 = torch.zeros_like(in_pix)
-# 
-            # for i in range (c):
-            #     im = x_pix_2[:,i,:,:].unsqueeze(1)
-        
-            #     im = blockify(im,n_blocks,4)
-            #     im = dct_2d(im)
-
-            #     img_dct1 = unblockify(im, [h_inp, w_inp], n_blocks, 4)
-            #     x_pix_2[:,i,:,:] = img_dct1.squeeze(1)
-      
-    def forward(self, args, image, n_blocks, dct_max, dct_min):
-        
-        b, c, h, w = image.shape
-        #----------------------------------------------------------------------
-        
-        img_ds = F.pixel_unshuffle(image, args.block_size//2)
-       
-        # create blocks (say, bxcx4x4) to be applied by DCT 
-        img_block = blockify(image, n_blocks, args.block_size)
-        
-        dct_block = dct_2d(img_block, norm='ortho')
-        
-        img_dct = unblockify(dct_block[:, 0:n_blocks], [h, w], n_blocks, args.block_size)
-       
-        img_dct = F.pixel_unshuffle(img_dct, args.block_size)
-        
-        img_dct = (img_dct -  dct_min[:,:16,:,:])/(dct_max[:,:16,:,:] - dct_min[:,:16,:,:]) 
-        
-        #----------------------------------------------------------------------
-        
-        x_pix = self.head_pix(img_ds)
-        x_dct = self.head_dct(img_dct)
-    
-        for i, layer in enumerate(self.body):
-            if i == 0:
-                res_pix, x_dct = layer(x_pix, x_dct)
-            else:
-                res_pix, x_dct = layer(res_pix, x_dct)
-            
-        res_pix += x_pix
-        x_pix = self.tail(res_pix)
-        x_pix = self.pix_shuffle(x_pix)
-        
-        x_pix += image
-        return x_pix
 
 #------------------------------------------------------------------------------
 
-class TSFNet_Chris(nn.Module):
+class TSFNet_E2SIFT(nn.Module):
     def __init__(self, conv=default_conv):
-        super(TSFNet_Chris, self).__init__()
+        super(TSFNet_E2SIFT, self).__init__()
 
         in_channel_img = 4 * 5
         in_channel_dct = 16 * 5
@@ -235,17 +154,6 @@ class TSFNet_Chris(nn.Module):
 
         img_ds = F.pixel_unshuffle(image,  2)
 
-        # create blocks (say, bxcx4x4) to be applied by DCT
-        # img_block = blockify(image, n_blocks, block_size)
-        #
-        # dct_block = dct_2d(img_block, norm='ortho')
-        #
-        # img_dct = unblockify(dct_block[:, 0:n_blocks], [h, w], n_blocks, block_size)
-        #
-        # img_dct = F.pixel_unshuffle(img_dct, block_size)
-        #
-        # img_dct = (img_dct - dct_min[:, :16, :, :]) / (dct_max[:, :16, :, :] - dct_min[:, :16, :, :])
-
         img_dct = dct_and_rearrange(image, self.dct_min, self.dct_max)
 
         # ----------------------------------------------------------------------
@@ -273,7 +181,7 @@ if __name__ == '__main__':
     # vox = np.load(vox_path, allow_pickle=True)
     # vox = torch.from_numpy(vox).float().unsqueeze(dim=0).cuda()
 
-    model = TSFNet_Chris().cuda()
+    model = TSFNet_E2SIFT().cuda()
     print('Parameters number is ', sum(param.numel() for param in model.parameters()))
 
     out = model(vox)

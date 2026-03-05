@@ -112,9 +112,9 @@ def process_sequence(seq, events_dir, upsamp_frames_dir, out_dir, dur_sec, num_b
             "avg_sd": float(avg_sd)
         }
 
-        # Save
-        np.save(f'{out_dir}/vox/{seq}_{im_name}.npy', vox)
-        np.save(f'{out_dir}/stats/{seq}_{im_name}.npy', stats)
+        # Save outputs
+        np.savez_compressed(f'{out_dir}/vox/{seq}_{im_name}.npz', vox)
+        np.savez_compressed(f'{out_dir}/stats/{seq}_{im_name}.npz', stats)
         shutil.copy(f'{upsamp_frames_dir}/{seq}/imgs/{gt_im_name}',
                     f'{out_dir}/images/{seq}_{im_name}.{im_ext}')
         

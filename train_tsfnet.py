@@ -7,40 +7,14 @@ from torch.utils.data import DataLoader
 from torch.autograd import Variable
 import os
 from datetime import datetime
-from model.model_chris import E2VID
-from models_biren.EDSR import TSFNet, TSFNet_Chris
-from utils.loading_utils import load_model
-from data_utils import Event_Camera_Dataset, Event_Camera_Dataset_LoG, Event_Camera_Dataset_single
+from models_biren.EDSR import TSFNet_E2SIFT
+from data_utils import Event_Camera_Dataset_LoG
 import torch.utils.data
 from torch.utils.tensorboard import SummaryWriter
 import time
 from pytorch_msssim import SSIM, ssim
 from torch.optim.lr_scheduler import CosineAnnealingLR
-from skimage.metrics import structural_similarity as compare_ssim
 import numpy as np
-import matplotlib.pyplot as plt
-
-# Define a function to calculate SSIM and MSE
-def calculate_ssim_mse(output, target):
-    ssim = 0.0
-    mse = 0.0
-    for i in range(output.size(0)):
-        # Convert tensors to numpy arrays
-        output_i = output[i].cpu().detach().numpy()
-        target_i = target[i].cpu().detach().numpy()
-        
-        # Calculate SSIM for each channel separately
-        ssim_i = 0.0
-        for channel in range(output_i.shape[0]):
-            ssim_i += compare_ssim(target_i[channel], output_i[channel], data_range=1)
-
-        ssim_i /= output_i.shape[0]  # Average SSIM over channels
-        ssim += ssim_i
-
-        # Calculate MSE
-        mse += ((target_i - output_i) ** 2).mean()
-
-    return ssim / output.size(0), mse / output.size(0)
 
 
 def train(epoch):
@@ -52,30 +26,20 @@ def train(epoch):
     psnr_sum = 0.0
     total_mse = 0.0
     total_ssim = 0.0
-    for batch_index, (voxs, dogs) in enumerate(train_loader):
-        # dog_0, _, _, _ = dogs
-        plt.figure(1);plt.imshow(voxs[1,4,:,:].data.cpu(), cmap="gray");plt.figure(2);plt.imshow(voxs[1,0,:,:].data.cpu(), cmap="gray")
-        hist, bins = np.histogram(voxs[1,4,:,:], bins=256);plt.figure(3);plt.plot(bins[:-1], hist);plt.grid()
+    for batch_index, (voxs, logs) in enumerate(train_loader):
         if torch.cuda.is_available():
             voxs = voxs.cuda()
-            # dog_0 = dog_0.cuda()
-            dogs = dogs.cuda()
+            logs = logs.cuda()
         
         optimizer.zero_grad()
         outputs = model(voxs)
 
-        # psnr_batch = psnr(dogs, outputs, max_value=1.0)
-        # psnr_sum += psnr_batch
-
-
-        # loss = criterion(outputs, dog_0)
-        l1_loss_value = l1_loss(outputs, dogs)
-        ssim_loss_value = 1 - ssim_loss(outputs, dogs)  # Subtract SSIM from 1 to make it a loss
+        l1_loss_value = l1_loss(outputs, logs)
+        ssim_loss_value = 1 - ssim_loss(outputs, logs)  # Subtract SSIM from 1 to make it a loss
 
         # Calculate SSIM and MSE for the batch
-        # batch_ssim, batch_mse = calculate_ssim_mse(outputs, dogs)
-        batch_ssim = ssim(outputs, dogs, data_range=1.0).mean().item()
-        batch_mse = mse_check(outputs, dogs).item()
+        batch_ssim = ssim(outputs, logs, data_range=1.0).mean().item()
+        batch_mse = mse_check(outputs, logs).item()
 
         max_pixel_value = 1.0  # Adjust this value based on your data's dynamic range
         psnr_batch = 10 * np.log10((max_pixel_value ** 2) / batch_mse)
@@ -84,7 +48,7 @@ def train(epoch):
         total_ssim += batch_ssim
         total_mse += batch_mse
 
-        # Combine the losses using a weighted sum (adjust weights as needed)
+        # Combine the losses
         loss = l1_loss_value + ssim_loss_value
         loss.backward()
         optimizer.step()
@@ -101,11 +65,11 @@ def train(epoch):
                 loss.item(),
                 optimizer.param_groups[0]['lr'],
                 epoch=epoch,
-                trained_samples=batch_index * opt.batch_size + len(voxs),
+                trained_samples=batch_index * args.batch_size + len(voxs),
                 total_samples=len(train_loader.dataset)
             ))
 
-        #update training loss for each iteration
+        # update training loss for each iteration
         # writer.add_scalar('Train/iter loss', loss.item(), n_iter)
         writer.add_scalar('LR/iter', optimizer.param_groups[0]['lr'], n_iter)
 
@@ -128,8 +92,8 @@ def train(epoch):
     writer.add_scalar('PSNR/Train', avg_psnr, epoch)
     writer.add_scalar('MSE/Train', average_mse, epoch)
     writer.add_scalar('SSIM/Train', average_ssim, epoch)
-    # writer.add_scalar('LR', optimizer.param_groups[0]['lr'], epoch)
     print('epoch {} training time consumed: {:.5f}s, train epoch loss = {:.5f}, PSNR = {:.5f}'.format(epoch, finish - start, avg_loss, avg_psnr))
+
 
 def eval_training(epoch=0):
 
@@ -144,26 +108,21 @@ def eval_training(epoch=0):
     total_mse = 0.0
     total_ssim = 0.0
     with torch.no_grad():
-        for (voxs, dogs) in valid_loader:
-            # dog_0, _, _, _ = dogs
+        for (voxs, logs) in valid_loader:
 
             if torch.cuda.is_available():
                 voxs = voxs.cuda()
-                # dog_0 = dog_0.cuda()
-                dogs = dogs.cuda()
+                logs = logs.cuda()
 
             outputs = model(voxs)
 
-            # psnr_batch = psnr(dogs, outputs, max_value=1.0)
-            # psnr_sum_val += psnr_batch
             
-            # loss = criterion(outputs, dog_0)
-            l1_loss_value = l1_loss(outputs, dogs)
-            ssim_loss_value = 1 - ssim_loss(outputs, dogs)  # Subtract SSIM from 1 to make it a loss
+            l1_loss_value = l1_loss(outputs, logs)
+            ssim_loss_value = 1 - ssim_loss(outputs, logs)  # Subtract SSIM from 1 to make it a loss
+            
             # Calculate SSIM and MSE for the batch
-            # batch_ssim, batch_mse = calculate_ssim_mse(outputs, dogs)
-            batch_ssim = ssim(outputs, dogs, data_range=1.0).mean().item()
-            batch_mse = mse_check(outputs, dogs).item()
+            batch_ssim = ssim(outputs, logs, data_range=1.0).mean().item()
+            batch_mse = mse_check(outputs, logs).item()
 
             max_pixel_value = 1.0  # Adjust this value based on your data's dynamic range
             psnr_batch = 10 * np.log10((max_pixel_value ** 2) / batch_mse)
@@ -213,67 +172,80 @@ def psnr(original, reconstructed, max_value=1.0):
     return psnr_value.item()
 
 
-
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="E2VID Training")
-    parser.add_argument('--use_pretrain', type=str, default=False, help='use pretrained model weights')
-    parser.add_argument('--pretrained_model_path', type=str, default=None)
-    parser.add_argument("--batch_size", type=int, default=16, help="batch size")
-    parser.add_argument("--end_epoch", type=int, default=100, help="number of epochs")
-    parser.add_argument("--init_lr", type=float, default=0.0001, help="initial learning rate")
-    parser.add_argument("--outf", type=str, default='./logs/', help='path log files')
-    parser.add_argument("--vox_path", type=str, default='/storage4tb/PycharmProjects/rpg_e2vid/output/ESIM/vox')
-    parser.add_argument("--dog_path", type=str, default='/storage4tb/PycharmProjects/rpg_e2vid/output/LoG_Pyramid')
-    parser.add_argument("--vox_path_valid", type=str, default='/storage4tb/PycharmProjects/rpg_e2vid/output/Event_Camera_Dataset_fix_dur_valid_for_esim_training/vox')
-    parser.add_argument("--dog_path_valid", type=str, default='/storage4tb/PycharmProjects/rpg_e2vid/output/LoG_Pyramid_valid')
-    parser.add_argument("--stride", type=int, default=8, help="stride")
-    parser.add_argument("--gpu_id", type=str, default='0', help='path log files')
-    opt = parser.parse_args()
+    parser = argparse.ArgumentParser(description="Training script for TSFNet_E2SIFT")
+    parser.add_argument("--vox_path", type=str, 
+                        help='Path to train event voxels')
+    parser.add_argument("--log_path", type=str, 
+                        help='Path to train LoG pyramids')
+    parser.add_argument("--vox_path_valid", type=str, 
+                        help='Path to validation event voxels')
+    parser.add_argument("--log_path_valid", type=str, 
+                        help='Path to validation LoG pyramids')
+    parser.add_argument("--out_path", type=str, default='./logs/',
+                        help='Path to output logs')
+    parser.add_argument("--vox_clip", type=float, nargs=2, default=[-2.5, 2.5], metavar=('min', 'max'),
+                        help='Min and max clipping value for event voxels')
+    parser.add_argument("--log_clip", type=float, nargs=2, default=[-0.15, 0.15], metavar=('min', 'max'),
+                        help='Min and max clipping value for LoG pyramid')
+    parser.add_argument("--batch_size", type=int, default=32,
+                        help="Batch size")
+    parser.add_argument("--epochs", type=int, default=200,
+                        help="Number of epochs")
+    parser.add_argument("--init_lr", type=float, default=0.0001,
+                        help="Initial learning rate")
+    parser.add_argument("--gpu_id", type=int, default=0,
+                        help='GPU ID to use for training/validation')
+    parser.add_argument("--n_workers", type=int, default=4,
+                        help='Number of workers for data loading')
+    
+
+    args = parser.parse_args()
     os.environ["CUDA_DEVICE_ORDER"] = 'PCI_BUS_ID'
-    os.environ["CUDA_VISIBLE_DEVICES"] = opt.gpu_id
-    id = '11'
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
+    id = '1'
     
     print("\nloading dataset ...")
-    # train_data_load = Event_Camera_Dataset(opt.vox_path, opt.dog_path, 'train', [-4, 4], [-8, 8])
-    train_data_load = Event_Camera_Dataset_LoG(opt.vox_path, opt.dog_path, 'train', [-5, 5], [-0.3, 0.3])
-    # train_data_load = Event_Camera_Dataset_single(opt.vox_path, opt.dog_path, 'train', [-4, 4], [-8, 8])
-    train_loader = torch.utils.data.DataLoader(train_data_load, batch_size=opt.batch_size, shuffle=True, num_workers=3)
+    train_data_load = Event_Camera_Dataset_LoG(args.vox_path, args.log_path, 'train', args.vox_clip, args.log_clip)
+    train_loader = torch.utils.data.DataLoader(train_data_load, batch_size=args.batch_size, shuffle=True, num_workers=args.n_workers)
     print(f"Iteration per epoch: {len(train_loader)}")
-    # valid_data_load = Event_Camera_Dataset(opt.vox_path_valid, opt.dog_path_valid, 'valid', [-4, 4], [-8, 8])
-    valid_data_load = Event_Camera_Dataset_LoG(opt.vox_path_valid, opt.dog_path_valid, 'valid', [-5, 5], [-0.3, 0.3])
-    # valid_data_load = Event_Camera_Dataset_single(opt.vox_path_valid, opt.dog_path_valid, 'valid', [-4, 4], [-8, 8])
-    valid_loader = torch.utils.data.DataLoader(valid_data_load, batch_size=opt.batch_size, shuffle=False, num_workers=3)
+
+    valid_data_load = Event_Camera_Dataset_LoG(args.vox_path_valid, args.log_path_valid, 'valid', args.vox_clip, args.log_clip)
+    valid_loader = torch.utils.data.DataLoader(valid_data_load, batch_size=args.batch_size, shuffle=False, num_workers=args.n_workers)
     print("Validation set samples: ", len(valid_loader))
 
-    # model
-    # Add how to load model from pretrained weights
-    if opt.use_pretrain:
-        model = load_model(opt.pretrained_model_path)
-    else:
-        # model = E2VID()
-        model = TSFNet_Chris()
+    model = TSFNet_E2SIFT()
     print('Parameters number is ', sum(param.numel() for param in model.parameters()))
 
     # loss function
     l1_loss = nn.L1Loss()
     ssim_loss = SSIM(channel=4)
     mse_check = nn.MSELoss()
-    optimizer = optim.Adam(model.parameters(), lr=opt.init_lr, betas=(0.9, 0.999))
+    optimizer = optim.Adam(model.parameters(), lr=args.init_lr, betas=(0.9, 0.999))
 
-    # total_steps = (opt.end_epoch + 1) * len(train_loader)
-    # total_steps_per_epoch = len(train_loader.dataset) // opt.batch_size
-    total_steps_per_epoch = len(train_loader)
-    T_max_fraction = 1.0
-    T_max = int(total_steps_per_epoch * T_max_fraction)
-    scheduler = CosineAnnealingLR(optimizer, T_max=T_max, eta_min=1e-6)
+    # total_steps = (args.epochs + 1) * len(train_loader)
+    # total_steps_per_epoch = len(train_loader.dataset) // args.batch_size
+    
+    # total_steps_per_epoch = len(train_loader)
+    # T_max_fraction = 1.0
+    # T_max = int(total_steps_per_epoch * T_max_fraction)
+    # scheduler = CosineAnnealingLR(optimizer, T_max=T_max, eta_min=1e-6)
+
+    total_steps = args.epochs * len(train_loader)
+
+    scheduler = CosineAnnealingLR(
+        optimizer,
+        T_max=total_steps,
+        eta_min=1e-6
+    )
 
     # output path
     DATE_FORMAT = '%A_%d_%B_%Y_%Hh_%Mm_%Ss'
     date_time = datetime.now().strftime(DATE_FORMAT)
-    opt.outf = f'{opt.outf}/{id}_{date_time}'
-    if not os.path.exists(opt.outf):
-        os.makedirs(opt.outf)
-    ckpt_path = opt.outf + '/ckpt/'
+    args.out_path = f'{args.out_path}/{id}_{date_time}'
+    if not os.path.exists(args.out_path):
+        os.makedirs(args.out_path)
+    ckpt_path = args.out_path + '/ckpt/'
     if not os.path.exists(ckpt_path):
         os.makedirs(ckpt_path)
 
@@ -284,13 +256,8 @@ if __name__ == '__main__':
 
     writer = SummaryWriter(log_dir=ckpt_path)
 
-    # input_tensor = torch.Tensor(1, 5, 160, 160)
-    # if torch.cuda.is_available():
-    #     input_tensor = input_tensor.cuda()
-    # writer.add_graph(model, input_tensor)
-
     best_loss = float('inf')
-    for epoch in range(1, opt.end_epoch + 1):
+    for epoch in range(1, args.epochs + 1):
         train(epoch)
         loss = eval_training(epoch)
 
@@ -298,16 +265,16 @@ if __name__ == '__main__':
 
         if loss < best_loss:
             best_loss = loss
-            # weights_path = checkpoint_path.format(net='best', epoch='', acc='')
 
             torch.save(model.state_dict(), os.path.join(ckpt_path, 'best.pth'))
             with open(os.path.join(ckpt_path, 'details.txt'), 'w') as f:
-                f.write(f'val_loss = {loss}, epoch = {epoch}, lr = {opt.init_lr}, batch_size = {opt.batch_size}')
+                f.write(f'val_loss = {loss}, epoch = {epoch}, lr = {args.init_lr}, batch_size = {args.batch_size}')
             f.close()
 
         torch.save(model.state_dict(), os.path.join(ckpt_path, f'{epoch}_best.pth'))
         with open(os.path.join(ckpt_path, f'{epoch}_details.txt'), 'w') as f:
-            f.write(f'val_loss = {loss}, epoch = {epoch}, lr = {opt.init_lr}, batch_size = {opt.batch_size}')
+            f.write(f'val_loss = {loss}, epoch = {epoch}, lr = {args.init_lr}, batch_size = {args.batch_size}')
         f.close()
 
     writer.close()
+

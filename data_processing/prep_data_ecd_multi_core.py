@@ -24,7 +24,7 @@ def find_nearest_larger_index(arr, value):
     return nearest_index
 
 
-def process_sequence(seq, base_path, out_path, dur_sec, num_bins, 
+def process_sequence(seq, base_path, out_dir, dur_sec, num_bins, 
                      keypoint_thresh, range_thresh, sd_thresh, num_of_events_th_low,
                      num_of_events_th_high, th_hist, plot):
 
@@ -110,9 +110,9 @@ def process_sequence(seq, base_path, out_path, dur_sec, num_bins,
         }
 
         # Save outputs
-        np.save(f'{out_path}/vox/{seq}_{im_name}.npy', vox)
-        np.save(f'{out_dir}/stats/{seq}_{im_name}.npy', stats)
-        shutil.copy(im_path, f'{out_path}/images/{seq}_{im_name}.{im_ext}')
+        np.savez_compressed(f'{out_dir}/vox/{seq}_{im_name}.npz', vox)
+        np.savez_compressed(f'{out_dir}/stats/{seq}_{im_name}.npz', stats)
+        shutil.copy(im_path, f'{out_dir}/images/{seq}_{im_name}.{im_ext}')
 
         if plot == 1:
             fig, axes = plt.subplots(3, len(vox), figsize=(12, 7))
@@ -131,7 +131,7 @@ def process_sequence(seq, base_path, out_path, dur_sec, num_bins,
                 axes[2][j].set_title(f'Vox Bin Clipped {j + 1}')
                 plt.colorbar(img, ax=axes[2][j])
             plt.tight_layout()
-            plt.savefig(f'{out_path}/plots/{seq}_{im_name}.{im_ext}')
+            plt.savefig(f'{out_dir}/plots/{seq}_{im_name}.{im_ext}')
             plt.close()
 
 if __name__ == "__main__":
