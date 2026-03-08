@@ -54,11 +54,13 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 - [Pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9)
 
 ## Quick Start
-- Download and place the [pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) inside the `datasets` folder in the parent directory.
-  
+- Create directories.
   ```bash
   mkdir datasets weights
   ```
+  
+- Download and place the [pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) inside the `datasets` folder in the parent directory.
+  
   ```bash
   # Unzip Event Camera Dataset sequences
   unzip datasets/ecd.zip -d datasets
