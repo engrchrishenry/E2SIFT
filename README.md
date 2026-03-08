@@ -231,7 +231,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   - `n_cores = <no_of_cpu_cores>`
 
 ## LoG Pyramid Recovery
-> ⚠️Important note: LoG pyramid clipping value $\pm c_{log}$ was mistakenly mentioned as $\pm ±0.15$ in the E2SIFT paper. To reproduce the paper results, use $\pm c_{log}=\pm 0.2$.
+> ⚠️Important note: LoG pyramid clipping value $\pm c_{log}$ was mistakenly mentioned as $\pm 0.15$ in the E2SIFT paper. To reproduce the paper results, use $\pm c_{log}=\pm 0.2$.
 
 - ### Training
 
