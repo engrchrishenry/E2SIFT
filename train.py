@@ -174,19 +174,27 @@ def psnr(original, reconstructed, max_value=1.0):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Training script for TSFNet_E2SIFT")
-    parser.add_argument("--vox_path", type=str, 
-                        help='Path to train event voxels')
-    parser.add_argument("--log_path", type=str, 
-                        help='Path to train LoG pyramids')
-    parser.add_argument("--vox_path_valid", type=str, 
-                        help='Path to validation event voxels')
-    parser.add_argument("--log_path_valid", type=str, 
-                        help='Path to validation LoG pyramids')
+    # parser.add_argument("--vox_path", type=str, 
+    #                     help='Path to train event voxels')
+    # parser.add_argument("--log_path", type=str, 
+    #                     help='Path to train LoG pyramids')
+    # parser.add_argument("--vox_path_valid", type=str, 
+    #                     help='Path to validation event voxels')
+    # parser.add_argument("--log_path_valid", type=str, 
+    #                     help='Path to validation LoG pyramids')
+    parser.add_argument("--vox_path", type=str, nargs="+",
+                        help="One or more paths to directories containing training voxel .npz files")
+    parser.add_argument("--log_path", type=str, nargs="+",
+                        help="One or more paths to directories containing training LoG pyramid .mat files")
+    parser.add_argument("--vox_path_valid", type=str, nargs="+",
+                        help="One or more paths to directories containing validation voxel .npz files")
+    parser.add_argument("--log_path_valid", type=str, nargs="+",
+                        help="One or more paths to directories containing validation LoG pyramid .mat files")
     parser.add_argument("--out_path", type=str, default='./logs/',
                         help='Path to output logs')
-    parser.add_argument("--vox_clip", type=float, nargs=2, default=[-2.5, 2.5], metavar=('min', 'max'),
+    parser.add_argument("--vox_clip", type=float, nargs=2, metavar=('min', 'max'),
                         help='Min and max clipping value for event voxels')
-    parser.add_argument("--log_clip", type=float, nargs=2, default=[-0.15, 0.15], metavar=('min', 'max'),
+    parser.add_argument("--log_clip", type=float, nargs=2, metavar=('min', 'max'),
                         help='Min and max clipping value for LoG pyramid')
     parser.add_argument("--dct_min", type=str, 
                         help='Path to dct_min.npy (generated via get_dct_min_max.py)')

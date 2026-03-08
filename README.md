@@ -49,13 +49,27 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
      pip install -r requirements.txt
      ```
 
-## Dataset Preparation
+## Download Links
+- [Pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) (as used in the E2SIFT paper)
+- [Pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9)
 
-<!-- ### Option 1: Use Pre-computed Data -->
+## Quick Start
+- Download and place the [pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) inside the `datasets` folder in the parent directory.
+  
+  ```bash
+  mkdir datasets weights
+  ```
+  ```bash
+  # Unzip Event Camera Dataset sequences
+  unzip datasets/ecd.zip -d datasets
 
-<!--Download -->
+  # Unzip Vimeo-90K Dataset (ESIM-generated)
+  unzip datasets/vimeo_90k_esim.zip -d datasets
+  ```
+- Download and place the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) inside the `weights` folder in the parent directory.
 
-<!--### Download Dataset-->
+## Dataset Preparation from Scratch
+
 The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html) (real events) and [Vimeo-90k Dataset](http://toflow.csail.mit.edu) ([ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)-generated synthetic events) for training and testing. A subset from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html) (real events) was used for testing.
   
 ### [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html)
@@ -213,9 +227,93 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   - `images_dir = 'images' directory path generated after running prep_data_esim_multi_core.py`
   - `output_dir = <output_log_dir>`
   - `n_cores = <no_of_cpu_cores>`
+
+## LoG Pyramid Recovery
+> ⚠️Important note: LoG pyramid clipping value $±c_{log}$ has been mistakenly mentioned as $±0.15$ in the E2SIFT paper. To reproduce the results, $±c_{log}=±0.2$ must be used.
+
+- ### Training
+
+  ```bash
+  python train.py --vox_path <ecd_train_voxel_path> <esim_train_voxel_path> \
+    --log_path <ecd_train_log_path> <esim_train_log_path> \
+    --vox_path_valid <ecd_valid_vox_path> \
+    --log_path_valid <ecd_valid_log_path> \
+    --out_path logs/ \
+    --dct_min <dct_min_npy_path> \
+    --dct_max <dct_max_npy_path> \
+    --vox_clip <vox_clip_min> <vox_clip_max> \
+    --log_clip <log_clip_min> <log_clip_max> \
+    --batch_size <batch_size> \
+    --epochs <num_of_epocs> \
+    --init_lr <initial_lr> \
+    --gpu_id <GPU_ID> \
+    --n_workers <num_of_workers>
+  ```
+
+  To train using pre-computed datasets and using the same parameters as in E2SIFT paper, run the following:
+
   
 
-## Training
+  ```bash
+  python train.py --vox_path datasets/ecd/train/vox datasets/vimeo_90k_esim/train/vox \
+    --log_path datasets/ecd/train/log datasets/vimeo_90k_esim/train/log \
+    --vox_path_valid datasets/ecd/test_all/vox \
+    --log_path_valid datasets/ecd/test_all/log \
+    --out_path logs/ \
+    --dct_min datasets/dct_min.npy \
+    --dct_max datasets/dct_max.npy \
+    --vox_clip -2.5 2.5 \
+    --log_clip -0.2 0.2 \
+    --batch_size 32 \
+    --epochs 200 \
+    --init_lr 0.0001 \
+    --gpu_id 0 \
+    --n_workers 4
+  ```
+
+  - ### Testing
+  ```bash
+  python test.py --vox_path <test_voxel_path> \
+    --log_path <gt_log_pyramid_path/log> \
+    --weights <weights_path> \
+    --out_path <output_pred_log_pyramid_path> \
+    --dct_min <dct_min_npy_path> \
+    --dct_max <dct_max_npy_path> \
+    --vox_clip <vox_clip_min> <vox_clip_max> \
+    --log_clip <log_clip_min> <log_clip_max> \
+    --batch_size <batch_size> \
+    --n_workers <num_of_workers> \
+    --plot
+  ```
+
+  Use the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) (placed inside [weights](https://github.com/engrchrishenry/E2SIFT/tree/main/weights) folder) and the [pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) (placed inside [datasets](https://github.com/engrchrishenry/E2SIFT/tree/main/datasets) folder) to reproduce results from Table 1 in E2SIFT. Run the following:
+
+  ```bash
+  python test.py --vox_path datasets/ecd/test_per_seq/boxes_6dof/vox \
+    --log_path datasets/ecd/test_per_seq/boxes_6dof/log \
+    --weights weights/e2sift_weights.pth \
+    --out_path output/pred/boxes_6dof/ \
+    --dct_min datasets/dct_min.npy \
+    --dct_max datasets/dct_max.npy \
+    --vox_clip -2.5 2.5 \
+    --log_clip -0.2 0.2 \
+    --batch_size 32 \
+    --n_workers 4 \
+    --plot
+  ```
+
+  The command above is for the `boxes_6dof` sequence from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html). Modify the paths and run teh script again for different sequences in `ecd/test_per_seq/`.
+
+## Results
+
+<div align="center">
+  <img src="figures/calibration_frame_00000014.png" alt="GT LoG vs Predicted LoG" width="590"/>
+  <br>
+  Ground truth LoG pyramid vs Predicted LoG pyramid.
+</div>
+
+
+
 
 ## Citation
 

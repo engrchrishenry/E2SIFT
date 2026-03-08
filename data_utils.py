@@ -92,8 +92,18 @@ def recon_norm_log(arr, clip_min, clip_max):
 
 class Event_Camera_Dataset_LoG(torch.utils.data.Dataset):
     def __init__(self, vox_path, log_path, mode, clip_vox, clip_log, activation):
-        self.vox_paths = sorted(glob.glob(f'{vox_path}/*.npz', recursive=True))
-        self.log_paths = sorted(glob.glob(f'{log_path}/*.mat', recursive=True))
+        # self.vox_paths = sorted(glob.glob(f'{vox_path}/*.npz', recursive=True))
+        # self.log_paths = sorted(glob.glob(f'{log_path}/*.mat', recursive=True))
+        self.vox_paths = sorted(
+            file
+            for path in vox_path
+            for file in glob.glob(os.path.join(path, "*.npz"), recursive=True)
+        )
+        self.log_paths = sorted(
+            file
+            for path in log_path
+            for file in glob.glob(os.path.join(path, "*.mat"), recursive=True)
+        )
         self.mode = mode
         self.clip_min_vox, self.clip_max_vox = clip_vox[0], clip_vox[1]
         self.clip_min_log, self.clip_max_log = clip_log[0], clip_log[1]
@@ -110,7 +120,7 @@ class Event_Camera_Dataset_LoG(torch.utils.data.Dataset):
         
         vox = np.load(vox_path)['arr_0']
         mat_data = loadmat(log_path)
-        log_0, log_1, log_2, log_3 = mat_data['x']
+        log_0, log_1, log_2, log_3 = mat_data['log_pyramid']
 
         vox = norm_vox_e2vid(torch.from_numpy(vox))
         vox = vox.cpu().numpy()

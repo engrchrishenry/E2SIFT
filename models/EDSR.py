@@ -5,15 +5,14 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-# from .img_op import blockify, unblockify
 
 from . import common
 from . import MST
 from .torch_dct import dct_2d
-# sys.path.append('/storage4tb/PycharmProjects/rpg_e2vid/')
-# from models_biren import common
-# from models_biren import MST
-# from models_biren.torch_dct import dct_2d
+# sys.path.append('/storage4tb/PycharmProjects/GitHub/E2SIFT/')
+# from models import common
+# from models import MST
+# from models.torch_dct import dct_2d
 
 
 def blockify(image, n_blocks, block_size):
@@ -23,7 +22,6 @@ def blockify(image, n_blocks, block_size):
 
 
 def unblockify(image_block, img_size, n_blocks, block_size):
-    # print(image_block.permute(0,2,1).shape)
     return F.fold(image_block.reshape(-1, n_blocks, block_size ** 2).permute(0, 2, 1),
                   output_size=(img_size[0], img_size[1]), kernel_size=block_size, stride=block_size)
 
@@ -71,15 +69,16 @@ def dct_and_rearrange(in_pix, dct_min, dct_max):
     x_pix_2 = rearrange_v2(x_pix_2)
 
     # x_pix_2 = (x_pix_2 - dct_min.view(1, 48, 1, 1)) / (dct_max.view(1, 48, 1, 1) - dct_min.view(1, 48, 1, 1))
-
     x_pix_2 = (x_pix_2 - dct_min.view(1, 80, 1, 1)) / (dct_max.view(1, 80, 1, 1) - dct_min.view(1, 80, 1, 1))
 
     return x_pix_2
+
 
 def default_conv(in_channels, out_channels, kernel_size, bias=True, groups=1):
     return nn.Conv2d(
         in_channels, out_channels, kernel_size,
         padding=(kernel_size // 2), bias=bias, groups=groups)
+
 
 class MSTFusionBlock(nn.Module):
     def __init__(self, dim_imgfeat, dim_dctfeat, kernel_size=3, conv=default_conv):
@@ -100,7 +99,7 @@ class MSTFusionBlock(nn.Module):
         out_pix = self.conv_img(in_pix)
         out_dct = self.conv_dct(in_dct)
         out_pix = self.msab(out_pix, self.stage_tconv(out_dct, output_size=in_pix.shape[2:]))
-        #out_pix = self.msab(out_pix, out_dct)
+        # out_pix = self.msab(out_pix, out_dct)
         return out_pix+in_pix, out_dct+in_dct
 
 
@@ -148,15 +147,9 @@ class TSFNet_E2SIFT(nn.Module):
         self.pix_shuffle = nn.PixelShuffle(2)
 
     def forward(self, image):
-
         b, c, h, w = image.shape
-        # ----------------------------------------------------------------------
-
         img_ds = F.pixel_unshuffle(image,  2)
-
         img_dct = dct_and_rearrange(image, self.dct_min, self.dct_max)
-
-        # ----------------------------------------------------------------------
 
         x_pix = self.head_pix(img_ds)
         x_dct = self.head_dct(img_dct)
@@ -168,21 +161,20 @@ class TSFNet_E2SIFT(nn.Module):
                 res_pix, x_dct = layer(res_pix, x_dct)
 
         res_pix += x_pix
-        # print ('1', res_pix.shape)
         x_pix = self.tail(res_pix)
-        # print ('2', res_pix.shape)
         x_pix = self.pix_shuffle(x_pix)
 
         return x_pix
 
 if __name__ == '__main__':
+    dct_min_path = '/storage4tb/PycharmProjects/GitHub/E2SIFT/output/dct_norm/dct_min.npy'
+    dct_max_path = '/storage4tb/PycharmProjects/GitHub/E2SIFT/output/dct_norm/dct_max.npy'
     vox = torch.rand(1, 5, 160, 160).cuda()
-    # vox_path = '/storage4tb/PycharmProjects/rpg_e2vid/output/updated/esim_reds_all/5_0.55_0.005_50_None_None/vox/002_val_00000001.npy'
-    # vox = np.load(vox_path, allow_pickle=True)
-    # vox = torch.from_numpy(vox).float().unsqueeze(dim=0).cuda()
-
-    model = TSFNet_E2SIFT().cuda()
-    print('Parameters number is ', sum(param.numel() for param in model.parameters()))
+    
+    model = TSFNet_E2SIFT(dct_min_path, dct_max_path).cuda()
+    num_params = sum(param.numel() for param in model.parameters())
+    
+    print(f'Number of model parameters = {num_params} ≈ {num_params/1e6:.2f}M')
 
     out = model(vox)
     print(out.shape)

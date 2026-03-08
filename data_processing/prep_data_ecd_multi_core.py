@@ -114,7 +114,7 @@ def process_sequence(seq, base_path, out_dir, dur_sec, num_bins,
         np.savez_compressed(f'{out_dir}/stats/{seq}_{im_name}.npz', stats)
         shutil.copy(im_path, f'{out_dir}/images/{seq}_{im_name}.{im_ext}')
 
-        if plot == 1:
+        if plot:
             fig, axes = plt.subplots(3, len(vox), figsize=(12, 7))
             plt.suptitle(f'{len(event_window)} range {range_vox:.3f} max {vox.max():.3f} min {vox.min():.3f}, avg_sd {avg_sd:.3f}, clip_thresh {th_hist}')
             
@@ -157,8 +157,8 @@ if __name__ == "__main__":
                         help='Range (max value - min value) threshold. None to ignore.')
     parser.add_argument('--th_hist', type=float, default=100,
                         help='Clipping threshold for histogram plotting. Value between 0 and 100, e.g., 99.9 means clipping at 99.9 percentile.')
-    parser.add_argument('--plot', type=bool, default=True,
-                        help='Plot figures. True -> save plots: False -> do not save plots')
+    parser.add_argument('--plot', action="store_true",
+                        help='Save plots.')
     parser.add_argument('--cores', type=int, default=-1,
                         help='Number of cores to use. -1 -> use all cores.')
     

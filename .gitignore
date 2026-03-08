@@ -4,3 +4,5 @@ output2/
 logs/
 data_processing/rename_log.json
 ecd/
+datasets/
+weights/
