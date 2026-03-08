@@ -54,6 +54,8 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 - [Pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9)
 
 ## Quick Start
+> ⚠️ Note: For reproducibility, LoG pyramid clipping value should be $\pm 0.2$ (not $\pm 0.15$ as in the E2SIFT paper).
+
 - Create directories.
   ```bash
   mkdir datasets weights
