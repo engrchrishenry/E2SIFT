@@ -236,25 +236,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 > ⚠️Important note: LoG pyramid clipping value $\pm c_{log}$ was mistakenly mentioned as $\pm 0.15$ in the E2SIFT paper. To reproduce the paper results, use $\pm c_{log}=\pm 0.2$.
 
 - ### Training
-
-  ```bash
-  python train.py --vox_path <ecd_train_voxel_path> <esim_train_voxel_path> \
-    --log_path <ecd_train_log_path> <esim_train_log_path> \
-    --vox_path_valid <ecd_valid_vox_path> \
-    --log_path_valid <ecd_valid_log_path> \
-    --out_path logs/ \
-    --dct_min <dct_min_npy_path> \
-    --dct_max <dct_max_npy_path> \
-    --vox_clip <vox_clip_min> <vox_clip_max> \
-    --log_clip <log_clip_min> <log_clip_max> \
-    --batch_size <batch_size> \
-    --epochs <num_of_epocs> \
-    --init_lr <initial_lr> \
-    --gpu_id <GPU_ID> \
-    --n_workers <num_of_workers>
-  ```
-
-  To train using pre-computed datasets and using the same parameters as in E2SIFT paper, run the following:
+  To train using [pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) and using the same parameters as in E2SIFT paper, run the following:
 
   ```bash
   python train.py --vox_path datasets/ecd/train/vox datasets/vimeo_90k_esim/train/vox \
@@ -273,21 +255,12 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --n_workers 4
   ```
 
-- ### Testing
+  Run the following for help with setting the parameters.
   ```bash
-  python test.py --vox_path <test_voxel_path> \
-    --log_path <gt_log_pyramid_path/log> \
-    --weights <weights_path> \
-    --out_path <output_pred_log_pyramid_path> \
-    --dct_min <dct_min_npy_path> \
-    --dct_max <dct_max_npy_path> \
-    --vox_clip <vox_clip_min> <vox_clip_max> \
-    --log_clip <log_clip_min> <log_clip_max> \
-    --batch_size <batch_size> \
-    --n_workers <num_of_workers> \
-    --plot
+  python train.py --help 
   ```
 
+- ### Testing
   Use the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) (placed inside [weights](https://github.com/engrchrishenry/E2SIFT/tree/main/weights) folder) and the [pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) (placed inside [datasets](https://github.com/engrchrishenry/E2SIFT/tree/main/datasets) folder) to reproduce results from Table 1 in E2SIFT. Run the following:
 
   ```bash
@@ -305,6 +278,11 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   ```
 
   The command above is for the `boxes_6dof` sequence from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html). Modify the paths and run the script again for different sequences in `ecd/test_per_seq/`.
+  
+  Run the following for help with setting the parameters.
+  ```bash
+  python test.py --help 
+  ```
 
   <div align="center">
   <img src="figures/calibration_frame_00000014.png" alt="GT LoG vs Predicted LoG" width="590"/>
@@ -318,8 +296,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
 - Modify the paths and parameters (if needed) in [gt_vs_pred_log_sift.m](https://github.com/engrchrishenry/E2SIFT/blob/main/neuromorphic_sift/gt_vs_pred_log_sift.m).
 - Run [gt_vs_pred_log_sift.m](https://github.com/engrchrishenry/E2SIFT/blob/main/neuromorphic_sift/gt_vs_pred_log_sift.m) to compute the matching accuracy between the SIFT keypoints detected via the ground truth LoG pyramid and the predicted LoG pyramid.
-- Run `gt_vs_pred_log_sift.m` separately for each sequence in `ecd/test_per_seq` to reproduce results from Table 2 in E2SIFT paper. `gt_vs_pred_log_sift.m` will output plots and a `results.txt` file.
-- Sample plot and a snippet from the `results.txt` file are shown below: 
+- Run `gt_vs_pred_log_sift.m` separately for each sequence in `ecd/test_per_seq` to reproduce results from Table 2 in E2SIFT paper. `gt_vs_pred_log_sift.m` will output plots and a `results.txt` file. Sample plot and a snippet from the `results.txt` file are shown below: 
 
   <div align="center">
   <img src="figures/boxes_6dof_frame_00000021.png" alt="GT LoG SIFT vs Predicted LoG SIFT" width="590"/>
