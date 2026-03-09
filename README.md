@@ -318,8 +318,8 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
 - Modify the paths and parameters (if needed) in [gt_vs_pred_log_sift.m](https://github.com/engrchrishenry/E2SIFT/blob/main/neuromorphic_sift/gt_vs_pred_log_sift.m).
 - Run [gt_vs_pred_log_sift.m](https://github.com/engrchrishenry/E2SIFT/blob/main/neuromorphic_sift/gt_vs_pred_log_sift.m) to compute the matching accuracy between the SIFT keypoints detected via the ground truth LoG pyramid and the predicted LoG pyramid.
-
-  Run `gt_vs_pred_log_sift.m` separately for each sequence in `ecd/test_per_seq` to reproduce results from Table 2 in E2SIFT paper. `gt_vs_pred_log_sift.m` will output plots and a `results.txt` file. Sample plot and a snippet from the `results.txt` file are shown below: 
+- Run `gt_vs_pred_log_sift.m` separately for each sequence in `ecd/test_per_seq` to reproduce results from Table 2 in E2SIFT paper. `gt_vs_pred_log_sift.m` will output plots and a `results.txt` file.
+- Sample plot and a snippet from the `results.txt` file are shown below: 
 
   <div align="center">
   <img src="figures/boxes_6dof_frame_00000021.png" alt="GT LoG SIFT vs Predicted LoG SIFT" width="590"/>
