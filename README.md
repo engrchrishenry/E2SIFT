@@ -138,7 +138,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --sd_th SD_TH         Standard deviation threshold. None to ignore.
     --range_th RANGE_TH   Range (max value - min value) threshold. None to ignore.
     --th_hist TH_HIST     Clipping threshold for histogram plotting. Value between 0 and 100, e.g., 99.9 means clipping at 99.9 percentile.
-    --plot PLOT           Plot figures. True -> save plots: False -> do not save plots
+    --plot                Save plots.
     --cores CORES         Number of cores to use. -1 -> use all cores.
   ```
 
@@ -221,7 +221,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --sd_th SD_TH         Standard deviation threshold. None to ignore.
     --range_th RANGE_TH   Range (max value - min value) threshold. None to ignore.
     --th_hist TH_HIST     Clipping threshold for histogram plotting. Value between 0 and 100, e.g., 99.9 means clipping at 99.9 percentile.
-    --plot PLOT           Plot figures. True -> save plots: False -> do not save plots
+    --plot                Save plots.
     --cores CORES         Number of cores to use. -1 -> use all cores.
   ```
 
@@ -232,7 +232,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   - `output_dir = <output_log_dir>`
   - `n_cores = <no_of_cpu_cores>`
 
-## LoG Pyramid Recovery
+## Events to LoG Pyramid Recovery
 > ⚠️Important note: LoG pyramid clipping value $\pm c_{log}$ was mistakenly mentioned as $\pm 0.15$ in the E2SIFT paper. To reproduce the paper results, use $\pm c_{log}=\pm 0.2$.
 
 - ### Training
@@ -304,7 +304,21 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --plot
   ```
 
-  The command above is for the `boxes_6dof` sequence from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html). Modify the paths and run teh script again for different sequences in `ecd/test_per_seq/`.
+  The command above is for the `boxes_6dof` sequence from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html). Modify the paths and run the script again for different sequences in `ecd/test_per_seq/`.
+
+## Neuromorphic SIFT Keypoint Detector
+
+- ### Ground Truth LoG Pyramid vs Predicted LoG Pyramid (MATLAB)
+  - Modify the paths and parameters (if needed) in [gt_vs_pred_log_sift.m]().
+  - Run [gt_vs_pred_log_sift.m]() to compute the matching accuracy between the SIFT keypoints detected via the ground truth LoG pyramid and the predicted LoG pyramid.
+
+  <div align="center">
+  <img src="figures/calibration_frame_00000014.png" alt="GT LoG vs Predicted LoG" width="590"/>
+  <br>
+  Ground truth LoG pyramid vs Predicted LoG pyramid.
+  </div>
+
+
 
 ## Results
 
