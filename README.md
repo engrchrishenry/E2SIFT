@@ -256,8 +256,6 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
   To train using pre-computed datasets and using the same parameters as in E2SIFT paper, run the following:
 
-  
-
   ```bash
   python train.py --vox_path datasets/ecd/train/vox datasets/vimeo_90k_esim/train/vox \
     --log_path datasets/ecd/train/log datasets/vimeo_90k_esim/train/log \
@@ -275,7 +273,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --n_workers 4
   ```
 
-  - ### Testing
+- ### Testing
   ```bash
   python test.py --vox_path <test_voxel_path> \
     --log_path <gt_log_pyramid_path/log> \
