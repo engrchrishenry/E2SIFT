@@ -10,17 +10,17 @@ clear all;
 close all;
 
 % Paths
-image_dir = 'D:\Chris Temp\Code\LoGSIFTGitHub\pred\calibration\images'; % Path to frames
-gt_log_dir = 'D:\Chris Temp\Code\LoGSIFTGitHub\pred\calibration\log'; % Path to ground truth LoG pyramid
-pred_log_dir = 'D:\Chris Temp\Code\LoGSIFTGitHub\pred\calibration\pred_log'; % Path to ground truth LoG pyramid
-output_dir = 'D:\Chris Temp\Code\LoGSIFTGitHub\output\calibration/'; % Path to output files
+image_dir = 'datasets/ecd/test_per_seq/boxes_6dof/images'; % Path to frames
+gt_log_dir = 'datasets/ecd/test_per_seq/boxes_6dof/log'; % Path to ground truth LoG pyramid
+pred_log_dir = 'output/pred/boxes_6dof/pred_log'; % Path to predicted LoG pyramid
+output_dir = 'output/boxes_6dof'; % Path to output files
 vl_feat_dir = 'vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup';  % Path to VLFeat
 
 % Parameters
 opt.log_peak_thres = 0.03; % Minimum LoG response magnitude required to consider a candidate keypoint
 opt.log_grad_thres = 0.05; % Maximum allowed absolute gradient at the scale-space peak (used to filter unstable extrema)
 tolerance = 5; % Spatial tolerance (in pixels) for matching GT and predicted keypoints
-plot_var = 0; % Set to 1 to save visualization plots, 0 to disable plotting
+plot_var = 1; % Set to 1 to save visualization plots, 0 to disable plotting
 cropSize = [160, 160];
 
 % Load VLFeat

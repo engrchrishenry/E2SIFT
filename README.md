@@ -306,34 +306,45 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
   The command above is for the `boxes_6dof` sequence from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html). Modify the paths and run the script again for different sequences in `ecd/test_per_seq/`.
 
-## Neuromorphic SIFT Keypoint Detector
-
-- ### Ground Truth LoG Pyramid vs Predicted LoG Pyramid (MATLAB)
-  - Modify the paths and parameters (if needed) in [gt_vs_pred_log_sift.m]().
-  - Run [gt_vs_pred_log_sift.m]() to compute the matching accuracy between the SIFT keypoints detected via the ground truth LoG pyramid and the predicted LoG pyramid.
-
   <div align="center">
   <img src="figures/calibration_frame_00000014.png" alt="GT LoG vs Predicted LoG" width="590"/>
   <br>
   Ground truth LoG pyramid vs Predicted LoG pyramid.
   </div>
 
+## Neuromorphic SIFT Keypoint Detector (MATLAB)
 
+### Ground Truth LoG Pyramid vs Predicted LoG Pyramid:
 
-## Results
+- Modify the paths and parameters (if needed) in [gt_vs_pred_log_sift.m](https://github.com/engrchrishenry/E2SIFT/blob/main/neuromorphic_sift/gt_vs_pred_log_sift.m).
+- Run [gt_vs_pred_log_sift.m](https://github.com/engrchrishenry/E2SIFT/blob/main/neuromorphic_sift/gt_vs_pred_log_sift.m) to compute the matching accuracy between the SIFT keypoints detected via the ground truth LoG pyramid and the predicted LoG pyramid.
 
-<div align="center">
-  <img src="figures/calibration_frame_00000014.png" alt="GT LoG vs Predicted LoG" width="590"/>
+  Run `gt_vs_pred_log_sift.m` separately for each sequence in `ecd/test_per_seq` to reproduce results from Table 2 in E2SIFT paper. `gt_vs_pred_log_sift.m` will output plots and a `results.txt` file. Sample plot and a snippet from the `results.txt` file are shown below: 
+
+  <div align="center">
+  <img src="figures/boxes_6dof_frame_00000021.png" alt="GT LoG SIFT vs Predicted LoG SIFT" width="590"/>
   <br>
-  Ground truth LoG pyramid vs Predicted LoG pyramid.
-</div>
+  SIFT keypoints detected via the ground truth LoG pyramid and the predicted LoG pyramid.
+  </div>
 
+  <br>
 
+  ```text
+  boxes_6dof_frame_00001288.png  ->  accuracy: 0.613924  matches: 194
+  boxes_6dof_frame_00001289.png  ->  accuracy: 0.737589  matches: 208
+  boxes_6dof_frame_00001290.png  ->  accuracy: 0.533597  matches: 135
+  boxes_6dof_frame_00001291.png  ->  accuracy: 0.598706  matches: 185
+  boxes_6dof_frame_00001292.png  ->  accuracy: 0.546667  matches: 164
+  boxes_6dof_frame_00001293.png  ->  accuracy: 0.680000  matches: 204
+  boxes_6dof_frame_00001294.png  ->  accuracy: 0.589905  matches: 187
 
+  =================================
+  Final Average Accuracy: 0.54184
+  ```
 
 ## Citation
 
-If you use this work, please cite:
+If you use this code, please cite:
 
 ```bibtex
 @INPROCEEDINGS{10647465,
