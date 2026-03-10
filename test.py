@@ -15,9 +15,9 @@ from scipy.io import savemat
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Testing script for TSFNet_E2SIFT")
     parser.add_argument("--vox_path", type=str, nargs="+",
-                        help="One or more paths to directories containing training voxel .npz files")
+                        help="One or more paths to directories containing test voxel .npz files")
     parser.add_argument("--log_path", type=str, nargs="+",
-                        help="One or more paths to directories containing training LoG pyramid .mat files")
+                        help="One or more paths to directories containing test LoG pyramid .mat files")
     parser.add_argument("--weights", type=str, 
                         help='Path to trained weights')
     parser.add_argument("--out_path", type=str,

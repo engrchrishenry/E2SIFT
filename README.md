@@ -3,7 +3,7 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
 
 <br>
 
-<div align="center">
+<p align="center">
   <img src="figures/overview_e2sift.jpg" alt="Overview E2SIFT" width="590"/>
   <br>
   Overall workflow of the proposed E2SIFT pipeline.
@@ -11,11 +11,23 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
 
 <br>
 
-<div align="center">
+<p align="center">
   <img src="figures/overview_keypoint_detection.jpg" alt="Overview Keypoint Detection" width="750"/>
   <br>
   Overall workflow of the proposed alternate keypoint detection.
 </div>
+
+## Table of Contents
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Download Links](#download-links)
+- [Quick Start](#quick-start)
+- [Dataset Preparation from Scratch](#dataset-preparation-from-scratch)
+- [Events to LoG Pyramid Recovery](#events-to-log-pyramid-recovery)
+- [Neuromorphic SIFT Keypoint Detector](#neuromorphic-sift-keypoint-detector-matlab)
+- [Citation](#citation)
+- [Acknowledgements](#acknowledgements)
+- [Contact](#contact)
 
 ## ⚠️Prerequisites
 The code was tested on Linux with the following prerequisites:
@@ -50,18 +62,19 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   4. For running MATLAB scripts, you are required to install [VLFeat](https://www.vlfeat.org/download.html).
 
 ## Download Links
-- [Pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) (as used in the E2SIFT paper)
+- [Precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) (as used in the E2SIFT paper)
 - [Pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9)
 
 ## Quick Start
-> ⚠️ Note: For reproducibility, LoG pyramid clipping value should be $\pm 0.2$ (not $\pm 0.15$ as in the E2SIFT paper).
+> ⚠️ Note: To reproduce the results reported in the paper, use a LoG pyramid clipping value of $\pm 0.2$ (instead of $\pm 0.15$ as mistakenly stated in the paper).
 
+- Complete the steps in the [Installation](#installation) section to set up the environment and dependencies.
 - Create directories.
   ```bash
   mkdir datasets weights
   ```
   
-- Download and place the [pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) inside the `datasets` folder in the parent directory.
+- Download and place the [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) inside the `datasets` folder in the parent directory.
   
   ```bash
   # Unzip Event Camera Dataset sequences
@@ -118,7 +131,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   
   We provide links to the train and test sequences used in the E2SIFT paper. The 'office_zigzag.zip' sequence was excluded as explained in the paper.
 
-  Download and the train/test sequences as mentioned in the E2SIFT paper.
+  Download the train and test sequences as mentioned in the E2SIFT paper.
 
   ```bash
   # Download train sequences
@@ -163,7 +176,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   options:
     -h, --help            show this help message and exit
     --events_dir EVENTS_DIR
-                          Path to directory containing ESIM-generated synthetic events
+                          Path to directory containing sequences from the Event Camera Dataset
     --out_dir OUT_DIR     Path to output directory
     --bins BINS           Number of bins for event voxel generation
     --dur_sec DUR_SEC     Event window duration in seconds
@@ -192,7 +205,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     The list of vimeo video links is available [here](https://data.csail.mit.edu/tofu/dataset/original_video_list.txt). We provide a helper script to batch download the videos.
     ```bash
     cd data_processing/
-    python download_vimeo90k.py --video_links data/original_video_list.txt -- out_path <ouptut_directory> --cores 2
+    python download_vimeo90k.py --video_links data/original_video_list.txt --out_path <output_directory> --cores 2
     ```
     Use less `--cores` to avoid "HTTP Error 429: Too Many Requests".
 
@@ -205,7 +218,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
   - Resize videos (important for synthetic event generation via [ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)).
     ```bash
-    python resize_vimeo90k_multi_core.py --video_dir <vimeo90k_dataset_path> --out_path <ouptut_directory> --res <width:height> --cores -1
+    python resize_vimeo90k_multi_core.py --video_dir <vimeo90k_dataset_path> --out_path <output_directory> --res <width:height> --cores -1
     ```
     Use `224:160` for `<width:height>` if you want to be consistent with the paper.
 
@@ -272,7 +285,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 > ⚠️Important note: LoG pyramid clipping value $\pm c_{log}$ was mistakenly mentioned as $\pm 0.15$ in the E2SIFT paper. To reproduce the paper results, use $\pm c_{log}=\pm 0.2$.
 
 - ### Training
-  To train using [pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) and using the same parameters as in E2SIFT paper, run the following:
+  To train using [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) and using the same parameters as in E2SIFT paper, run the following:
 
   ```bash
   python train.py --vox_path datasets/ecd/train/vox datasets/vimeo_90k_esim/train/vox \
@@ -319,7 +332,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   ```
 
 - ### Testing
-  Use the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) (placed inside [weights](https://github.com/engrchrishenry/E2SIFT/tree/main/weights) folder) and the [pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) (placed inside [datasets](https://github.com/engrchrishenry/E2SIFT/tree/main/datasets) folder) to reproduce results from Table 1 in E2SIFT. Run the following:
+  Use the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) (placed inside [weights](https://github.com/engrchrishenry/E2SIFT/tree/main/weights) folder) and the [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) (placed inside [datasets](https://github.com/engrchrishenry/E2SIFT/tree/main/datasets) folder) to reproduce results from Table 1 in E2SIFT. Run the following:
 
   ```bash
   python test.py --vox_path datasets/ecd/test_per_seq/boxes_6dof/vox \
@@ -344,9 +357,9 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   options:
     -h, --help            show this help message and exit
     --vox_path VOX_PATH [VOX_PATH ...]
-                          One or more paths to directories containing training voxel .npz files
+                          One or more paths to directories containing test voxel .npz files
     --log_path LOG_PATH [LOG_PATH ...]
-                          One or more paths to directories containing training LoG pyramid .mat files
+                          One or more paths to directories containing test LoG pyramid .mat files
     --weights WEIGHTS     Path to trained weights
     --out_path OUT_PATH   Path to output predicted LoG pyramid
     --vox_clip min max    Min and max clipping value for event voxels
@@ -360,7 +373,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --plot                Save plots. If not set, only .mat files will be saved
   ```
 
-  <div align="center">
+  <p align="center">
   <img src="figures/calibration_frame_00000014.png" alt="GT LoG vs Predicted LoG" width="590"/>
   <br>
   Ground truth LoG pyramid vs Predicted LoG pyramid.
@@ -372,7 +385,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 - Run [gt_vs_pred_log_sift.m](https://github.com/engrchrishenry/E2SIFT/blob/main/neuromorphic_sift/gt_vs_pred_log_sift.m) to compute the matching accuracy between the SIFT keypoints detected via the ground truth LoG pyramid and the predicted LoG pyramid.
 - Run `gt_vs_pred_log_sift.m` separately for each sequence in `ecd/test_per_seq` to reproduce results from Table 2 in E2SIFT paper. `gt_vs_pred_log_sift.m` will output plots and a `results.txt` file. Sample plot and a snippet from the `results.txt` file are shown below: 
 
-  <div align="center">
+  <p align="center">
   <img src="figures/boxes_6dof_frame_00000021.png" alt="GT LoG SIFT vs Predicted LoG SIFT" width="590"/>
   <br>
   SIFT keypoints detected via the ground truth LoG pyramid and the predicted LoG pyramid.
@@ -438,5 +451,5 @@ This work was supported by the National Science Foundation (NSF) under Award 214
 We gratefully acknowledge the authors and contributors for making their work publicly available.
 
 ## Contact
-In case of questions, feel free to contact at chffn@umsystem.edu or engr.chrishenry@gmail.com
+If you have questions or issues regarding the code, feel free to contact: chffn@umsystem.edu or engr.chrishenry@gmail.com
 

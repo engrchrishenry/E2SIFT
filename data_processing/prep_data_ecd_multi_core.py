@@ -135,10 +135,10 @@ def process_sequence(seq, base_path, out_dir, dur_sec, num_bins,
             plt.close()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate event voxels from ESIM-generated synthetic events.")
+    parser = argparse.ArgumentParser(description="Generate event voxels from sequences in the Event Camera Dataset.")
 
     parser.add_argument("--events_dir", type=str, required=True,
-                        help="Path to directory containing ESIM-generated synthetic events")
+                        help="Path to directory containing sequences from the Event Camera Dataset")
     parser.add_argument('--out_dir', type=str, required=True,
                         help='Path to output directory')
     parser.add_argument('--bins', type=int, default=5,
