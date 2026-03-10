@@ -23,6 +23,7 @@ The code was tested on Linux with the following prerequisites:
 2. PyTorch 2.7.1 (CUDA 11.8)
 3. MATLAB R2021a
 4. VLFeat 0.9.21
+
 Remaining libraries are available in [requirements.txt](https://github.com/engrchrishenry/loc_aware_video_dedup/blob/main/requirements.txt)
 
 ## Installation
@@ -46,7 +47,6 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
      ```bash
      pip install -r requirements.txt
      ```
-     
   4. For running MATLAB scripts, you are required to install [VLFeat](https://www.vlfeat.org/download.html).
 
 ## Download Links
