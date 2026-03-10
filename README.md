@@ -29,7 +29,7 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
 - [Acknowledgements](#acknowledgements)
 - [Contact](#contact)
 
-## ⚠️Prerequisites
+## Prerequisites
 The code was tested on Linux with the following prerequisites:
 1. Python 3.13
 2. PyTorch 2.7.1 (CUDA 11.8)
@@ -424,9 +424,10 @@ If you use this code, please cite:
 
 ```
 
+<!--
 <mark>⚠️You may also explore our work on event-based object detection [here](). Consider citing the following:</mark>
 
-<!--
+
 ```bibtex
 @INPROCEEDINGS{10095417,
   author={Henry, Chris and Liao, Rijun and Lin, Ruiyuan and Zhang, Zhebin and Sun, Hongyu and Li, Zhu},
