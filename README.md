@@ -18,13 +18,11 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
 </div>
 
 ## ⚠️Prerequisites
-The code is tested on Linux with the following prerequisites:
-1. Python 3.12
-2. PyTorch 1.11.0 (CUDA 11.3)
+The code was tested on Linux with the following prerequisites:
+1. Python 3.13
+2. PyTorch 2.7.1 (CUDA 11.8)
 3. MATLAB R2021a
 4. VLFeat 0.9.21
-5. pip install yt-dlp 
-pip install -U yt-dlp secretstorage
 Remaining libraries are available in [requirements.txt](https://github.com/engrchrishenry/loc_aware_video_dedup/blob/main/requirements.txt)
 
 ## Installation
@@ -48,6 +46,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
      ```bash
      pip install -r requirements.txt
      ```
+  4. For running MATLAB scripts, you are required to install [VLFeat](https://www.vlfeat.org/download.html).
 
 ## Download Links
 - [Pre-computed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) (as used in the E2SIFT paper)
@@ -71,6 +70,41 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   unzip datasets/vimeo_90k_esim.zip -d datasets
   ```
 - Download and place the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) inside the `weights` folder in the parent directory.
+- Train network for LoG pyramid recovery
+  ```bash
+  python train.py --vox_path datasets/ecd/train/vox datasets/vimeo_90k_esim/train/vox \
+    --log_path datasets/ecd/train/log datasets/vimeo_90k_esim/train/log \
+    --vox_path_valid datasets/ecd/test_all/vox \
+    --log_path_valid datasets/ecd/test_all/log \
+    --out_path logs/ \
+    --dct_min datasets/dct_min.npy \
+    --dct_max datasets/dct_max.npy \
+    --vox_clip -2.5 2.5 \
+    --log_clip -0.2 0.2 \
+    --batch_size 32 \
+    --epochs 200 \
+    --init_lr 0.0001 \
+    --gpu_id 0 \
+    --n_workers 4
+  ```
+- Test network for LoG pyramid recovery
+  ```bash
+  python test.py --vox_path datasets/ecd/test_per_seq/boxes_6dof/vox \
+    --log_path datasets/ecd/test_per_seq/boxes_6dof/log \
+    --weights weights/e2sift_weights.pth \
+    --out_path output/pred/boxes_6dof/ \
+    --dct_min datasets/dct_min.npy \
+    --dct_max datasets/dct_max.npy \
+    --vox_clip -2.5 2.5 \
+    --log_clip -0.2 0.2 \
+    --batch_size 32 \
+    --n_workers 4 \
+    --plot
+  ```
+  The command above tests on the `boxes_6dof` sequence. Update `--vox_path`, `--log_path`, and `--out_path` for testing on other sequences.
+- Compute matching accuracy for SIFT keypoints detected via ground truth LoG and predicted LoG pyramid
+  Run [gt_vs_pred_log_sift.m](https://github.com/engrchrishenry/E2SIFT/blob/main/neuromorphic_sift/gt_vs_pred_log_sift.m) after modifying the paths and parameters (if needed).
+  Run `gt_vs_pred_log_sift.m` separately for each sequence in `ecd/test_per_seq` to reproduce results from Table 2 in E2SIFT paper.  
 
 ## Dataset Preparation from Scratch
 
