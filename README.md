@@ -105,9 +105,8 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   The command above tests on the `boxes_6dof` sequence. Update `--vox_path`, `--log_path`, and `--out_path` for testing on other sequences.
 - Compute matching accuracy for SIFT keypoints detected via ground truth LoG and predicted LoG pyramid
 
-  Run [gt_vs_pred_log_sift.m](https://github.com/engrchrishenry/E2SIFT/blob/main/neuromorphic_sift/gt_vs_pred_log_sift.m) after modifying the paths and parameters (if needed).
-  
-  Run `gt_vs_pred_log_sift.m` separately for each sequence in `ecd/test_per_seq` to reproduce results from Table 2 in E2SIFT paper.  
+  - Run [gt_vs_pred_log_sift.m](https://github.com/engrchrishenry/E2SIFT/blob/main/neuromorphic_sift/gt_vs_pred_log_sift.m) after modifying the paths and parameters (if needed).
+  - Run `gt_vs_pred_log_sift.m` separately for each sequence in `ecd/test_per_seq` to reproduce results from Table 2 in E2SIFT paper.  
 
 ## Dataset Preparation from Scratch
 
