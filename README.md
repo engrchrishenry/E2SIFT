@@ -446,7 +446,7 @@ If you use this code, please cite:
 
 This work was supported by the National Science Foundation (NSF) under Award 2148382.
 
-- [TSF-Net](ieeexplore.ieee.org/document/10275101/) model implementation were adapted from: https://github.com/parasmaharjan/TSFNet  
+- [TSF-Net](ieeexplore.ieee.org/document/10275101/) model implementation was adapted from: https://github.com/parasmaharjan/TSFNet  
 - Some parts of the event data processing were adapted from: https://github.com/uzh-rpg/rpg_e2vid
 
 We gratefully acknowledge the authors and contributors for making their work publicly available.
