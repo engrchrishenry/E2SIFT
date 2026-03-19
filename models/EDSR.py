@@ -30,7 +30,6 @@ def rearrange_v2(img_dct):
     k = 0
     temp = torch.zeros_like(img_dct)
     for i in range(16):
-        # j = 0
         temp[:, k, :, :] = img_dct[:, i, :, :]
         k = k + 1
 
