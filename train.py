@@ -174,14 +174,6 @@ def psnr(original, reconstructed, max_value=1.0):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Training script for TSFNet_E2SIFT")
-    # parser.add_argument("--vox_path", type=str, 
-    #                     help='Path to train event voxels')
-    # parser.add_argument("--log_path", type=str, 
-    #                     help='Path to train LoG pyramids')
-    # parser.add_argument("--vox_path_valid", type=str, 
-    #                     help='Path to validation event voxels')
-    # parser.add_argument("--log_path_valid", type=str, 
-    #                     help='Path to validation LoG pyramids')
     parser.add_argument("--vox_path", type=str, nargs="+",
                         help="One or more paths to directories containing training voxel .npz files")
     parser.add_argument("--log_path", type=str, nargs="+",
