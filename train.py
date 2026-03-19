@@ -227,14 +227,6 @@ if __name__ == '__main__':
     mse_check = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=args.init_lr, betas=(0.9, 0.999))
 
-    # total_steps = (args.epochs + 1) * len(train_loader)
-    # total_steps_per_epoch = len(train_loader.dataset) // args.batch_size
-    
-    # total_steps_per_epoch = len(train_loader)
-    # T_max_fraction = 1.0
-    # T_max = int(total_steps_per_epoch * T_max_fraction)
-    # scheduler = CosineAnnealingLR(optimizer, T_max=T_max, eta_min=1e-6)
-
     total_steps = args.epochs * len(train_loader)
 
     scheduler = CosineAnnealingLR(
