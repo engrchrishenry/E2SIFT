@@ -6,7 +6,7 @@ import scipy.io
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Generate a histogram for event voxels or LoG pyramids. Useful for setting clipping threshold for event voxels and LoG pyramids during training TSFNet_E2SIFT')
+    parser = argparse.ArgumentParser(description='Generate a histogram for event voxels or LoG pyramids. Useful for setting clipping threshold for event voxels or LoG pyramids during training TSFNet_E2SIFT')
     parser.add_argument('--data_path', type=str, required=True,
                         help='Path to the directory containing events voxels or log pyramids')
     parser.add_argument('--save_file', type=str, required=True,
@@ -30,7 +30,7 @@ if __name__ == "__main__":
         if fname.endswith(".npz"):
             arr = np.load(os.path.join(data_path, fname))['arr_0']
         if fname.endswith(".mat"):
-            arr = scipy.io.loadmat(os.path.join(data_path, fname))['x']
+            arr = scipy.io.loadmat(os.path.join(data_path, fname))['log_pyramid']
             
         arr = arr.reshape(-1)
 

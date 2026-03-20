@@ -2,13 +2,11 @@ import torch
 import torch.nn as nn
 import argparse
 import torch.optim as optim
-import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
-from torch.autograd import Variable
 import os
 from datetime import datetime
 from models.EDSR import TSFNet_E2SIFT
-from data_utils import Event_Camera_Dataset_LoG
+from data_utils import Event_to_LoG_Dataset
 import torch.utils.data
 from torch.utils.tensorboard import SummaryWriter
 import time
@@ -42,7 +40,7 @@ def train(epoch):
         batch_mse = mse_check(outputs, logs).item()
 
         max_pixel_value = 1.0  # Adjust this value based on your data's dynamic range
-        psnr_batch = 10 * np.log10((max_pixel_value ** 2) / batch_mse)
+        psnr_batch = 10 * np.log10((max_pixel_value ** 2) / batch_mse + 1e-8)
         psnr_sum += psnr_batch
 
         total_ssim += batch_ssim
@@ -125,7 +123,7 @@ def eval_training(epoch=0):
             batch_mse = mse_check(outputs, logs).item()
 
             max_pixel_value = 1.0  # Adjust this value based on your data's dynamic range
-            psnr_batch = 10 * np.log10((max_pixel_value ** 2) / batch_mse)
+            psnr_batch = 10 * np.log10((max_pixel_value ** 2) / batch_mse + 1e-8)
             psnr_sum_val += psnr_batch
 
             total_ssim += batch_ssim
@@ -166,12 +164,6 @@ def eval_training(epoch=0):
         return avg_loss_val
 
 
-def psnr(original, reconstructed, max_value=1.0):
-    mse = torch.mean((original - reconstructed) ** 2)
-    psnr_value = 20 * torch.log10(max_value / torch.sqrt(mse))
-    return psnr_value.item()
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Training script for TSFNet_E2SIFT")
     parser.add_argument("--vox_path", type=str, nargs="+",
@@ -202,24 +194,27 @@ if __name__ == '__main__':
                         help='GPU ID to use for training/validation')
     parser.add_argument("--n_workers", type=int, default=4,
                         help='Number of workers for data loading')
+    parser.add_argument("--id", type=str, default='1',
+                        help='Set a unique ID for output logs directory')
     
 
     args = parser.parse_args()
     os.environ["CUDA_DEVICE_ORDER"] = 'PCI_BUS_ID'
     os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
-    id = '1'
     
     print("\nloading dataset ...")
-    train_data_load = Event_Camera_Dataset_LoG(args.vox_path, args.log_path, 'train', args.vox_clip, args.log_clip, 'sigmoid')
+    train_data_load = Event_to_LoG_Dataset(args.vox_path, args.log_path, 'train', args.vox_clip, args.log_clip, 'sigmoid')
     train_loader = torch.utils.data.DataLoader(train_data_load, batch_size=args.batch_size, shuffle=True, num_workers=args.n_workers)
     print(f"Iteration per epoch: {len(train_loader)}")
 
-    valid_data_load = Event_Camera_Dataset_LoG(args.vox_path_valid, args.log_path_valid, 'valid', args.vox_clip, args.log_clip, 'sigmoid')
+    valid_data_load = Event_to_LoG_Dataset(args.vox_path_valid, args.log_path_valid, 'valid', args.vox_clip, args.log_clip, 'sigmoid')
     valid_loader = torch.utils.data.DataLoader(valid_data_load, batch_size=args.batch_size, shuffle=False, num_workers=args.n_workers)
     print("Validation set samples: ", len(valid_loader))
 
     model = TSFNet_E2SIFT(args.dct_min, args.dct_max)
-    print('Parameters number is ', sum(param.numel() for param in model.parameters()))
+    
+    num_params = sum(param.numel() for param in model.parameters())
+    print(f'Number of model parameters = {num_params} ≈ {num_params/1e6:.2f}M')
 
     # loss function
     l1_loss = nn.L1Loss()
@@ -238,7 +233,7 @@ if __name__ == '__main__':
     # output path
     DATE_FORMAT = '%A_%d_%B_%Y_%Hh_%Mm_%Ss'
     date_time = datetime.now().strftime(DATE_FORMAT)
-    args.out_path = f'{args.out_path}/{id}_{date_time}'
+    args.out_path = f'{args.out_path}/{args.id}_{date_time}'
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
     ckpt_path = args.out_path + '/ckpt/'

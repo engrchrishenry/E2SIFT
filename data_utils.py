@@ -6,54 +6,9 @@ import numpy as np
 from PIL import Image, ImageOps
 import os
 import glob
-# from utils.event_readers import FixedSizeEventReader, FixedDurationEventReader, myFixedDurationEventReader
-# from utils.inference_utils import events_to_voxel_grid, events_to_voxel_grid_pytorch, CropParameters
 import matplotlib.pyplot as plt
-# import pysift
 import cv2
 from scipy.io import loadmat
-
-
-def get_duration_s(file_path, start_frame, num_of_frames=2):
-    f = open(file_path, 'r')
-    lines = f.readlines()
-    
-    prev_time = None
-    durations_s = []
-    durations_ms = []
-    for i in range(start_frame, len(lines), num_of_frames): # starts with 1 to skip 1 line in events.txt file
-        line = lines[i].replace('\n', '')
-        time, im_name = line.split(' ')
-        time = float(time)
-        if prev_time == None:
-            prev_time = time
-            continue
-        duration_s = time - prev_time
-        durations_s.append([duration_s, prev_time, time, im_name])#*1000)
-        durations_ms.append([duration_s*1e+6, prev_time*1e+6, time*1e+6, im_name])
-        prev_time = time
-    return durations_s # , durations_ms # durations_s/durations_ms gives [duration, start_time, end_time, im_name]]
-
-
-def get_duration_thu_sevi(file_path, start_frame, num_of_frames=2):
-    f = open(file_path, 'r')
-    lines = f.readlines()
-    
-    prev_time = None
-    durations_s = []
-    durations_ms = []
-    for i in range(start_frame, len(lines), num_of_frames): # starts with 1 to skip 1 line in events.txt file
-        line = lines[i].replace('\n', '')
-        time = float(line)
-        if prev_time == None:
-            prev_time = time
-            continue
-        duration_ms = time - prev_time
-        im_name = f'{i}.jpg'
-        durations_s.append([duration_ms/1e+6, prev_time/1e+6, time/1e+6, im_name])#*1000)
-        durations_ms.append([duration_ms, prev_time, time, im_name])
-        prev_time = time
-    return durations_s, durations_ms #  # durations_s/durations_ms gives [duration, start_time, end_time, im_name]]
 
 
 def norm_vox_log(arr, clip_min, clip_max, activation):
@@ -90,10 +45,8 @@ def recon_norm_log(arr, clip_min, clip_max):
     return arr * (clip_max - clip_min) + clip_min
 
 
-class Event_Camera_Dataset_LoG(torch.utils.data.Dataset):
+class Event_to_LoG_Dataset(torch.utils.data.Dataset):
     def __init__(self, vox_path, log_path, mode, clip_vox, clip_log, activation):
-        # self.vox_paths = sorted(glob.glob(f'{vox_path}/*.npz', recursive=True))
-        # self.log_paths = sorted(glob.glob(f'{log_path}/*.mat', recursive=True))
         self.vox_paths = sorted(
             file
             for path in vox_path
@@ -169,25 +122,13 @@ class Event_Camera_Dataset_LoG(torch.utils.data.Dataset):
         return vox, logs, name
 
 
-def npy_loader(path):
-    sample = torch.from_numpy(np.load(path)).float()
-    # sample = sample[0:12, :, :]
-    return sample
-
-
 if __name__ == "__main__":
-    vox_path = '/storage4tb/PycharmProjects/rpg_e2vid/output/updated/esim_reds_filtered_patched/train/5_0.55_0.005_50_100000_400000/vox'
-    ssd_feat_path = '/storage/result_ssd300_5ms/train/feat'
-    # print (vox.shape)
-    # vox = vox[:1,:,:]
-    # plt.imshow(vox[0], cmap='gray')
-    # plt.savefig('x.png')
-    # print (vox)
+    vox_path = 'path_to_voxels_dir'
+    log_path = 'path_to_LoG_pyramid_dir'
 
-    train_data_load = Event_Camera_Dataset_SSD(vox_path, ssd_feat_path, clip_vox=[-1, 1], clip_ssd_feat=[-1, 1], activation='sigmoid')
+    train_data_load = Event_to_LoG_Dataset(vox_path, log_path, 'train', clip_vox=[-1, 1], clip_log=[-1, 1], activation='sigmoid')
     training_loader = torch.utils.data.DataLoader(train_data_load, batch_size=2, shuffle=False, num_workers=2)
-    for vox, im, name in training_loader:
-        print (vox.shape, im.shape, name)
-        
+    for vox, log, name in training_loader:
+        print (vox.shape, log.shape, name)
         exit(0)
-    # print (cifar100_training_loader)
+

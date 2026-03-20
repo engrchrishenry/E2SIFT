@@ -329,6 +329,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --gpu_id GPU_ID       GPU ID to use for training/validation
     --n_workers N_WORKERS
                           Number of workers for data loading
+    --id ID               Set a unique ID for output logs directory
   ```
 
 - ### Testing

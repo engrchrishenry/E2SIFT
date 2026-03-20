@@ -4,7 +4,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 import os
 from models.EDSR import TSFNet_E2SIFT
-from data_utils import Event_Camera_Dataset_LoG, recon_norm_log
+from data_utils import Event_to_LoG_Dataset, recon_norm_log
 import torch.utils.data
 from pytorch_msssim import SSIM, ssim
 import numpy as np
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    test_data_load = Event_Camera_Dataset_LoG(args.vox_path, args.log_path, 'valid', args.vox_clip, args.log_clip, 'sigmoid')
+    test_data_load = Event_to_LoG_Dataset(args.vox_path, args.log_path, 'valid', args.vox_clip, args.log_clip, 'sigmoid')
     test_loader = torch.utils.data.DataLoader(test_data_load, batch_size=args.batch_size, shuffle=False, num_workers=args.n_workers)
     print("Test batches: ", len(test_loader))
 
