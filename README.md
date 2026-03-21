@@ -331,28 +331,6 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
                           Number of workers for data loading
     --id ID               Set a unique ID for output logs directory
   ```
-
-  If you want prepare your own dataset from scratch, you should recompute --vox_clip, --log_clip, and --dct_min/--dct_max values:
-  ```bash
-  # Event voxel clipping value (--vox_clip)
-  python get_vox_log_clip_thresh.py --data_path <event_voxels_path> \
-    --save_file output/hists/vox_hist.png \
-    --samp_percent 5 \
-    --hist_pctl 99.9
-  
-  # LoG pyramid clipping value (--log_clip)
-  python get_vox_log_clip_thresh.py --data_path <LoG_pyramid_path> \
-    --save_file output/hists/log_hist.png \
-    --samp_percent 5 \
-    --hist_pctl 99.9
-
-  # DCT normalization values (--dct_min/--dct_max)
-  python get_dct_min_max.py --data_dir <event_voxels_path> \
-  --vox_clip <vox_min> <vox_max> \
-  --num_voxels 10000 \
-  --model_ip_size 160:160 \
-  --out_path output/dct_norm
-  ```
   
 - ### Testing
   Use the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) (placed inside [weights](https://github.com/engrchrishenry/E2SIFT/tree/main/weights) folder) and the [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) (placed inside [datasets](https://github.com/engrchrishenry/E2SIFT/tree/main/datasets) folder) to reproduce results from Table 1 in E2SIFT. Run the following:
@@ -394,6 +372,28 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --n_workers N_WORKERS
                           Number of workers for data loading
     --plot                Save plots. If not set, only .mat files will be saved
+  ```
+
+- If you want prepare your own dataset from scratch, you should recompute --vox_clip, --log_clip, and --dct_min/--dct_max values for use during training and testing:
+  ```bash
+  # Event voxel clipping value (--vox_clip)
+  python get_vox_log_clip_thresh.py --data_path <event_voxels_path> \
+    --save_file output/hists/vox_hist.png \
+    --samp_percent 5 \
+    --hist_pctl 99.9
+  
+  # LoG pyramid clipping value (--log_clip)
+  python get_vox_log_clip_thresh.py --data_path <LoG_pyramid_path> \
+    --save_file output/hists/log_hist.png \
+    --samp_percent 5 \
+    --hist_pctl 99.9
+
+  # DCT normalization values (--dct_min/--dct_max)
+  python get_dct_min_max.py --data_dir <event_voxels_path> \
+  --vox_clip <vox_min> <vox_max> \
+  --num_voxels 10000 \
+  --model_ip_size 160:160 \
+  --out_path output/dct_norm
   ```
 
   <p align="center">
