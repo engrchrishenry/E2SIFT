@@ -46,7 +46,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     data_dir = args.data_dir
-    num_voxels = args.num_voxels # 4000 # 20000 10000
+    num_voxels = args.num_voxels
     out_path = args.out_path
     vox_clip_min = args.vox_clip[0]
     vox_clip_max = args.vox_clip[1]
