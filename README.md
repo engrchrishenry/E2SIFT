@@ -374,7 +374,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --plot                Save plots. If not set, only .mat files will be saved
   ```
 
-- **Note:** If you prepared dataset from scratch, you should recompute `--vox_clip`, `--log_clip`, and `--dct_min`/`--dct_max` values for use during training and testing:
+- **Note:** If you prepared the dataset from scratch, you should recompute `--vox_clip`, `--log_clip`, and `--dct_min`/`--dct_max` values for use during training and testing:
   ```bash
   # Event voxel clipping value (--vox_clip)
   python get_vox_log_clip_thresh.py --data_path <event_voxels_path> \
