@@ -4,7 +4,7 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
 <br>
 
 <p align="center">
-  <img src="figures/overview_e2sift.jpg" alt="Overview E2SIFT" width="590"/>
+  <img src="figures/overview_e2sift.jpg" alt="Overview E2SIFT" width="590">
   <br>
   Overall workflow of the proposed E2SIFT pipeline.
 </p>
@@ -12,7 +12,7 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
 <br>
 
 <p align="center">
-  <img src="figures/overview_keypoint_detection.jpg" alt="Overview Keypoint Detection" width="750"/>
+  <img src="figures/overview_keypoint_detection.jpg" alt="Overview Keypoint Detection" width="750">
   <br>
   Overall workflow of the proposed alternate keypoint detection.
 </p>
@@ -185,7 +185,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     cd data_processing/
     python download_vimeo90k.py --video_links data/original_video_list.txt --out_path <output_directory> --cores 2
     ```
-    Use less `--cores` to avoid "HTTP Error 429: Too Many Requests".
+    Use fewer `--cores` to avoid "HTTP Error 429: Too Many Requests".
 
     `download_vimeo90k.py` downloads the lowest quality video available   (without audio). Modify the `ydl_opts` in `download_vimeo90k.py` to change this behavior.
 
@@ -202,7 +202,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
 - Synthesize events
   
-  Follow the instructions [here](https://github.com/uzh-rpg/rpg_vid2e/tree/master) to setup ESIM and build the python binding with GPU support. Use a different conda environment with the exact versions of the dependencies reqired to run ESIM with GPU support. Once ESIM is setup:
+  Follow the instructions [here](https://github.com/uzh-rpg/rpg_vid2e/tree/master) to setup ESIM and build the python binding with GPU support. Use a different conda environment with the exact versions of the dependencies required to run ESIM with GPU support. Once ESIM is setup:
 
   Upsample Vimeo-90k videos to a higher FPS via [upsample.py](https://github.com/uzh-rpg/rpg_vid2e/blob/master/upsampling/upsample.py). Sample command:
   ```bash
@@ -308,10 +308,10 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   ```
 
   <p align="center">
-  <img src="figures/calibration_frame_00000014.png" alt="GT LoG vs Predicted LoG" width="590"/>
+  <img src="figures/calibration_frame_00000014.png" alt="GT LoG vs Predicted LoG" width="590">
   <br>
   Ground truth LoG pyramid vs Predicted LoG pyramid.
-  </div>
+  </p>
 
 ## Neuromorphic SIFT Keypoint Detector (MATLAB)
 
@@ -320,10 +320,10 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 - Run `gt_vs_pred_log_sift.m` separately for each sequence in `ecd/test_per_seq` to reproduce results from Table 2 in E2SIFT paper. `gt_vs_pred_log_sift.m` will output plots and a `results.txt` file. Sample plot and a snippet from the `results.txt` file are shown below: 
 
   <p align="center">
-  <img src="figures/boxes_6dof_frame_00000021.png" alt="GT LoG SIFT vs Predicted LoG SIFT" width="590"/>
+  <img src="figures/boxes_6dof_frame_00000021.png" alt="GT LoG SIFT vs Predicted LoG SIFT" width="590">
   <br>
   SIFT keypoints detected via the ground truth LoG pyramid and the predicted LoG pyramid.
-  </div>
+  </p>
 
   <br>
 
