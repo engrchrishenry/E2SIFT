@@ -74,7 +74,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   mkdir datasets weights
   ```
   
-- Download and place the [Precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgB9N02raiIFTZbZcD_Eh1mbATzo-mHEK6NgiGdvqwVa8WE?e=F4y0th) inside the `datasets` folder in the parent directory.
+- Download and place the [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgB9N02raiIFTZbZcD_Eh1mbATzo-mHEK6NgiGdvqwVa8WE?e=F4y0th) inside the `datasets` folder in the parent directory.
   
   ```bash
   # Unzip Event Camera Dataset sequences
