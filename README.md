@@ -7,7 +7,7 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
   <img src="figures/overview_e2sift.jpg" alt="Overview E2SIFT" width="590"/>
   <br>
   Overall workflow of the proposed E2SIFT pipeline.
-</div>
+</p>
 
 <br>
 
@@ -15,7 +15,7 @@ This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: 
   <img src="figures/overview_keypoint_detection.jpg" alt="Overview Keypoint Detection" width="750"/>
   <br>
   Overall workflow of the proposed alternate keypoint detection.
-</div>
+</p>
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
@@ -171,27 +171,8 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
   # Generate event voxels for testing the model
   python prep_data_ecd_multi_core.py --events_dir ecd/test/ --out_dir <output_path>
   ```
-
-  Usage:
-
-  ```bash
-  options:
-    -h, --help            show this help message and exit
-    --events_dir EVENTS_DIR
-                          Path to directory containing sequences from the Event Camera Dataset
-    --out_dir OUT_DIR     Path to output directory
-    --bins BINS           Number of bins for event voxel generation
-    --dur_sec DUR_SEC     Event window duration in seconds
-    --res RES             Event camera resolution (e.g., '240:180')
-    --events_per_px EVENTS_PER_PX
-                          Number of events per pixel
-    --kp_th KP_TH         Keypoint threshold for rejecting blank frames. None to ignore.
-    --sd_th SD_TH         Standard deviation threshold. None to ignore.
-    --range_th RANGE_TH   Range (max value - min value) threshold. None to ignore.
-    --th_hist TH_HIST     Clipping threshold for histogram plotting. Value between 0 and 100, e.g., 99.9 means clipping at 99.9 percentile.
-    --plot                Save plots.
-    --cores CORES         Number of cores to use. -1 -> use all cores.
-  ```
+  
+  For usage instructions, run `python prep_data_ecd_multi_core.py --help`.
 
 - Generate Laplacian of Gaussian (LoG)
 
@@ -253,28 +234,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --out_dir <output_path>
   ```
   
-  Usage:
-
-  ```bash
-  options:
-    -h, --help            show this help message and exit
-    --events_dir EVENTS_DIR
-                          Path to directory containing ESIM-generated synthetic events
-    --upsamp_frames_dir UPSAMP_FRAMES_DIR
-                          Path to directory containing upsampled frames
-    --out_dir OUT_DIR     Path to output directory
-    --bins BINS           Number of bins for event voxel generation
-    --dur_sec DUR_SEC     Event window duration in seconds
-    --res RES             Event camera resolution (e.g., '224:160')
-    --events_per_px EVENTS_PER_PX
-                          Number of events per pixel
-    --kp_th KP_TH         Keypoint threshold for rejecting blank frames. None to ignore.
-    --sd_th SD_TH         Standard deviation threshold. None to ignore.
-    --range_th RANGE_TH   Range (max value - min value) threshold. None to ignore.
-    --th_hist TH_HIST     Clipping threshold for histogram plotting. Value between 0 and 100, e.g., 99.9 means clipping at 99.9 percentile.
-    --plot                Save plots.
-    --cores CORES         Number of cores to use. -1 -> use all cores.
-  ```
+  For usage instructions, run `python prep_data_esim_multi_core.py --help`.
 
 - Generate Laplacian of Gaussian (LoG)
 
@@ -306,33 +266,8 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
     --n_workers 4
   ```
 
-  Usage:
+  For usage instructions, run `python train.py --help`.
 
-  ```bash
-  options:
-    -h, --help            show this help message and exit
-    --vox_path VOX_PATH [VOX_PATH ...]
-                          One or more paths to directories containing training voxel .npz files
-    --log_path LOG_PATH [LOG_PATH ...]
-                          One or more paths to directories containing training LoG pyramid .mat files
-    --vox_path_valid VOX_PATH_VALID [VOX_PATH_VALID ...]
-                          One or more paths to directories containing validation voxel .npz files
-    --log_path_valid LOG_PATH_VALID [LOG_PATH_VALID ...]
-                          One or more paths to directories containing validation LoG pyramid .mat files
-    --out_path OUT_PATH   Path to output logs
-    --vox_clip min max    Min and max clipping value for event voxels
-    --log_clip min max    Min and max clipping value for LoG pyramid
-    --dct_min DCT_MIN     Path to dct_min.npy (generated via get_dct_min_max.py)
-    --dct_max DCT_MAX     Path to dct_max.npy (generated via get_dct_min_max.py)
-    --batch_size BATCH_SIZE
-                          Batch size
-    --epochs EPOCHS       Number of epochs
-    --init_lr INIT_LR     Initial learning rate
-    --gpu_id GPU_ID       GPU ID to use for training/validation
-    --n_workers N_WORKERS
-                          Number of workers for data loading
-    --id ID               Set a unique ID for output logs directory
-  ```
   
 - ### Testing
   Use the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) (placed inside [weights](https://github.com/engrchrishenry/E2SIFT/tree/main/weights) folder) and the [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa) (placed inside [datasets](https://github.com/engrchrishenry/E2SIFT/tree/main/datasets) folder) to reproduce results from Table 1 in E2SIFT. Run the following:
@@ -353,28 +288,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
   The command above is for the `boxes_6dof` sequence from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html). Modify the paths and run the script again for different sequences in `ecd/test_per_seq/`.
   
-  
-  Usage:
-
-  ```bash
-  options:
-    -h, --help            show this help message and exit
-    --vox_path VOX_PATH [VOX_PATH ...]
-                          One or more paths to directories containing test voxel .npz files
-    --log_path LOG_PATH [LOG_PATH ...]
-                          One or more paths to directories containing test LoG pyramid .mat files
-    --weights WEIGHTS     Path to trained weights
-    --out_path OUT_PATH   Path to output predicted LoG pyramid
-    --vox_clip min max    Min and max clipping value for event voxels
-    --log_clip min max    Min and max clipping value for LoG pyramid
-    --dct_min DCT_MIN     Path to dct_min.npy (generated via get_dct_min_max.py)
-    --dct_max DCT_MAX     Path to dct_max.npy (generated via get_dct_min_max.py)
-    --batch_size BATCH_SIZE
-                          Batch size
-    --n_workers N_WORKERS
-                          Number of workers for data loading
-    --plot                Save plots. If not set, only .mat files will be saved
-  ```
+  For usage instructions, run `python test.py --help`.
 
 - **Note:** If you prepared the dataset from scratch, you should recompute `--vox_clip`, `--log_clip`, and `--dct_min`/`--dct_max` values for use during training and testing:
   ```bash
