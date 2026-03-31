@@ -4,3 +4,6 @@ output2/
 logs/
 data_processing/rename_log.json
 ecd/
+ecd.zip
+vimeo_90k_esim/
+vimeo_90k_esim.zip
