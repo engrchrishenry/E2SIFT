@@ -1,6 +1,8 @@
 # E2SIFT: Neuromorphic SIFT via Direct Feature Pyramid Recovery from Events
 This is the official implementation of the IEEE ICIP 2024 paper titled [E2SIFT: Neuromorphic SIFT via Direct Feature Pyramid Recovery from Events](https://doi.org/10.1109/ICIP51287.2024.10647465).
 
+E2SIFT detects SIFT keypoints directly from event camera data without reconstructing intensity frames. It learns to recover the Laplacian-of-Gaussian (LoG) feature pyramid from sparse event voxels, and identifies scale-space extrema using a polynomial fitting and roots-based method, enabling accurate and efficient keypoint detection from asynchronous event streams.
+
 <br>
 
 <p align="center">
