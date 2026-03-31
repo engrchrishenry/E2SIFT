@@ -69,7 +69,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 > ⚠️ Note: To reproduce the results reported in the paper, use a LoG pyramid clipping value of $\pm 0.2$ (instead of $\pm 0.15$ as mistakenly stated in the paper).
 
 - Complete the steps in the [Installation](#installation) section to set up the environment and dependencies.  
-- Download and place the [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgB9N02raiIFTZbZcD_Eh1mbATzo-mHEK6NgiGdvqwVa8WE?e=F4y0th) inside the `datasets` folder in the parent directory.
+- Download and place the [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgB9N02raiIFTZbZcD_Eh1mbATzo-mHEK6NgiGdvqwVa8WE?e=F4y0th) inside the [datasets](https://github.com/engrchrishenry/E2SIFT/tree/main/datasets) folder in the parent directory.
   
   ```bash
   # Unzip Event Camera Dataset sequences
@@ -78,7 +78,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
   # Unzip Vimeo-90K Dataset (ESIM-generated)
   unzip datasets/vimeo_90k_esim.zip -d datasets
   ```
-- Download and place the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) inside the `weights` folder in the parent directory.
+- Download and place the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) inside the [weights](https://github.com/engrchrishenry/E2SIFT/tree/main/datasets) folder in the parent directory.
 - Train network for LoG pyramid recovery
   ```bash
   python train.py --vox_path datasets/ecd/train/vox datasets/vimeo_90k_esim/train/vox \
