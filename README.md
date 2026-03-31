@@ -270,7 +270,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 
   
 - ### Testing
-  Use the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) (placed inside [weights](https://github.com/engrchrishenry/E2SIFT/tree/main/weights) folder) and the [Precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgB9N02raiIFTZbZcD_Eh1mbATzo-mHEK6NgiGdvqwVa8WE?e=F4y0th) (placed inside [datasets](https://github.com/engrchrishenry/E2SIFT/tree/main/datasets) folder) to reproduce results from Table 1 in E2SIFT. Run the following:
+  Use the [pre-trained weights](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCmFLuvjcT_SJyhmdnvHdVHAZeaz390WAU7tOtn1WIQrnk?e=Ny8GT9) (placed inside [weights](https://github.com/engrchrishenry/E2SIFT/tree/main/weights) folder) and the [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgB9N02raiIFTZbZcD_Eh1mbATzo-mHEK6NgiGdvqwVa8WE?e=F4y0th) (placed inside [datasets](https://github.com/engrchrishenry/E2SIFT/tree/main/datasets) folder) to reproduce results from Table 1 in E2SIFT. Run the following:
 
   ```bash
   python test.py --vox_path datasets/ecd/test_per_seq/boxes_6dof/vox \
