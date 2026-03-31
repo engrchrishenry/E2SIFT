@@ -247,7 +247,7 @@ The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.u
 > ⚠️Important note: LoG pyramid clipping value $\pm c_{log}$ was mistakenly mentioned as $\pm 0.15$ in the E2SIFT paper. To reproduce the paper results, use $\pm c_{log}=\pm 0.2$.
 
 - ### Training
-  To train using [Precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgB9N02raiIFTZbZcD_Eh1mbATzo-mHEK6NgiGdvqwVa8WE?e=F4y0th) and using the same parameters as in E2SIFT paper, run the following:
+  To train using [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgB9N02raiIFTZbZcD_Eh1mbATzo-mHEK6NgiGdvqwVa8WE?e=F4y0th) and using the same parameters as in E2SIFT paper, run the following:
 
   ```bash
   python train.py --vox_path datasets/ecd/train/vox datasets/vimeo_90k_esim/train/vox \
