@@ -68,12 +68,7 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 ## Quick Start
 > ⚠️ Note: To reproduce the results reported in the paper, use a LoG pyramid clipping value of $\pm 0.2$ (instead of $\pm 0.15$ as mistakenly stated in the paper).
 
-- Complete the steps in the [Installation](#installation) section to set up the environment and dependencies.
-- Create directories.
-  ```bash
-  mkdir datasets weights
-  ```
-  
+- Complete the steps in the [Installation](#installation) section to set up the environment and dependencies.  
 - Download and place the [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgB9N02raiIFTZbZcD_Eh1mbATzo-mHEK6NgiGdvqwVa8WE?e=F4y0th) inside the `datasets` folder in the parent directory.
   
   ```bash
