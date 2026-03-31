@@ -123,6 +123,8 @@ Remaining libraries are available in [requirements.txt](https://github.com/engrc
 
 ## Dataset Preparation from Scratch
 
+> ⚠️ This section is only required if you want to reproduce the dataset from scratch. For most users, please use the [precomputed datasets](https://mailmissouri-my.sharepoint.com/:f:/g/personal/chffn_umsystem_edu/IgCvKBoXFMn0Rb_Lo3yjXsKTASQbyxG3cxb9zsOKYhr3GD0?e=oRzZqa).
+
 The E2SIFT paper used a subset from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html) (real events) and [Vimeo-90k Dataset](http://toflow.csail.mit.edu) ([ESIM](https://github.com/uzh-rpg/rpg_vid2e/tree/master)-generated synthetic events) for training and testing. A subset from the [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html) (real events) was used for testing.
   
 ### [Event Camera Dataset](https://rpg.ifi.uzh.ch/davis_data.html)
