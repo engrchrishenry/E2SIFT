@@ -360,7 +360,7 @@ If you use this code, please cite:
 
 ```
 
-<mark>⚠️You may also explore our work on event-based object detection [here](https://github.com/engrchrishenry/E2Detect). Consider citing the following:</mark>
+You may also explore our work on event-based object detection [here](https://github.com/engrchrishenry/E2Detect). Consider citing the following:
 
 
 ```bibtex
