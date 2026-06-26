@@ -362,6 +362,8 @@ If you use this code, please cite:
 
 You may also explore our work on event-based object detection [here](https://github.com/engrchrishenry/E2Detect). Consider citing the following:
 
+You may also explore our work on event-based object detection, **E2Detect** ([Paper](https://ieeexplore.ieee.org/document/11562756) | [Code](https://github.com/engrchrishenry/E2Detect)). If you use E2Detect, please cite:
+
 
 ```bibtex
 @INPROCEEDINGS{11562756,
