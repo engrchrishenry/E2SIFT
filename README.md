@@ -360,23 +360,21 @@ If you use this code, please cite:
 
 ```
 
-<!--
-<mark>⚠️You may also explore our work on event-based object detection [here](). Consider citing the following:</mark>
+<mark>⚠️You may also explore our work on event-based object detection [here](https://github.com/engrchrishenry/E2Detect). Consider citing the following:</mark>
 
 
 ```bibtex
-@INPROCEEDINGS{10095417,
-  author={Henry, Chris and Liao, Rijun and Lin, Ruiyuan and Zhang, Zhebin and Sun, Hongyu and Li, Zhu},
-  booktitle={ICASSP 2023 - 2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
-  title={Lightweight Fisher Vector Transfer Learning for Video Deduplication}, 
-  year={2023},
+@INPROCEEDINGS{11562756,
+  author={Henry, Chris and Li, Zhu and Katsaggelos, Aggelos K.},
+  booktitle={2026 IEEE International Symposium on Circuits and Systems (ISCAS)}, 
+  title={E2Detect: Object Detection from Event Camera via Sparse Feature Pyramid Recovery}, 
+  year={2026},
   volume={},
   number={},
-  pages={1-5},
-  keywords={Computational modeling;Transfer learning;Transforms;Multilayer perceptrons;Signal processing;Robustness;Encoding;Video deduplication;near-duplicate video detection;near-duplicate video copy detection;fisher vector aggregation},
-  doi={10.1109/ICASSP49357.2023.10095417}}
+  pages={957-961},
+  keywords={Object detection;Printing;Conferences;Cameras;Event detection;Computers;Signal detection;Computer vision;Modeling;Detectors},
+  doi={10.1109/ISCAS66217.2026.11562756}}
 ```
--->
 
 ## Acknowledgements
 
